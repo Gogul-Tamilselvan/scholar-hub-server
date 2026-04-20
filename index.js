@@ -450,8 +450,25 @@ app.post('/send/reviewer-approved', async (req, res) => {
 //   reviewerComments[], doi, plag }
 // ════════════════════════════════════════════════════════════════════════════
 app.post('/send/status-update', async (req, res) => {
-  const { name, email, mID, manuscriptTitle, journalName, status, recommendation, reviewerComments, doi, plag } = req.body;
-  if (!email || !status) return res.status(400).json({ error: 'email and status required' });
+  console.log('📥 Incoming Status Update:', JSON.stringify(req.body, null, 2));
+  const b = req.body;
+  const d = b.details || {};
+  
+  const name = b.name || d.name;
+  const email = b.email || d.email;
+  const status = b.status || d.status;
+  const targetId = b.manuscriptId || b.mID || d.manuscriptId || d.mID;
+  const title = b.manuscriptTitle || b.title || d.manuscriptTitle || d.mTitle || d.title;
+  const journal = b.journalName || b.journal || d.journalName || d.journal;
+  const doi = b.doi || d.doi;
+  const plag = b.plag || d.plag;
+  const reviewerComments = b.reviewerComments || d.reviewerComments;
+  const recommendation = b.recommendation || d.recommendation;
+
+  if (!email || !status) {
+    console.error('❌ Missing required fields:', { email, status });
+    return res.status(400).json({ error: 'email and status required' });
+  }
 
   const currentStatus = status.toLowerCase();
   let badgeColor = "#64748b";
@@ -569,11 +586,11 @@ app.post('/send/status-update', async (req, res) => {
     <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:20px; margin:24px 0;">
       <table style="width:100%; border-collapse:collapse;">
         <tr><td style="padding:6px 0; color:#64748b; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.05em; width:35%;">Manuscript ID</td>
-            <td style="padding:6px 0; font-size:14px; font-weight:900; color:#213361; font-family:monospace;">${mID || '—'}</td></tr>
+            <td style="padding:6px 0; font-size:14px; font-weight:900; color:#213361; font-family:monospace;">${targetId || '—'}</td></tr>
         <tr><td style="padding:6px 0; color:#64748b; font-size:11px; font-weight:800; text-transform:uppercase;">Journal</td>
-            <td style="padding:6px 0; font-size:13px; color:#334155;">${journalName || '—'}</td></tr>
+            <td style="padding:6px 0; font-size:13px; color:#334155;">${journal || '—'}</td></tr>
         <tr><td style="padding:6px 0; color:#64748b; font-size:11px; font-weight:800; text-transform:uppercase;">Title</td>
-            <td style="padding:6px 0; font-size:13px; color:#334155; font-weight:600; line-height:1.5;">${manuscriptTitle || 'Untitled'}</td></tr>
+            <td style="padding:6px 0; font-size:13px; color:#334155; font-weight:600; line-height:1.5;">${title || 'Untitled'}</td></tr>
       </table>
     </div>
 
@@ -603,7 +620,17 @@ app.post('/send/status-update', async (req, res) => {
 // { name, email, rID, role, journal, status }
 // ════════════════════════════════════════════════════════════════════════════
 app.post('/send/reviewer-status-update', async (req, res) => {
-  const { name, email, rID, role, journal, status } = req.body;
+  console.log('📥 Incoming Reviewer Status Update:', JSON.stringify(req.body, null, 2));
+  const b = req.body;
+  const d = b.details || {};
+
+  const name = b.name || d.name;
+  const email = b.email || d.email;
+  const status = b.status || d.status;
+  const rID = b.rID || d.rID || b.reviewerId || d.reviewerId;
+  const role = b.role || d.role;
+  const journal = b.journal || d.journal;
+
   if (!email || !status) return res.status(400).json({ error: 'email and status required' });
 
   const currentStatus = status.toLowerCase();
@@ -1188,7 +1215,12 @@ app.post('/send/reviewer-assignment-update', async (req, res) => {
 
 // A. Manuscript Submission Confirmation
 app.post('/send/manuscript-submission', async (req, res) => {
-  const { name, email, msId, title, journal } = req.body;
+  const b = req.body;
+  const name = b.name;
+  const email = b.email;
+  const msId = b.msId || b.manuscriptId || b.mID;
+  const title = b.title || b.manuscriptTitle;
+  const journal = b.journal || b.journalName;
   const subject = `Manuscript Received: [ID: ${msId}] - ${journal}`;
   const html = wrapper(`
     <p>Dear <strong>${name}</strong>,</p>
