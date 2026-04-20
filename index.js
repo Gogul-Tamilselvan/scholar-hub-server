@@ -99,7 +99,9 @@ app.get('/health', (req, res) => res.json({ status: 'ok' }));
 // { name, email, manuscriptId, title, journal, researchField }
 // ════════════════════════════════════════════════════════════════════════════
 app.post('/send/manuscript-submitted', async (req, res) => {
-  const { name, email, manuscriptId, title, journal, researchField } = req.body;
+  console.log('📥 Incoming Manuscript Submission:', JSON.stringify(req.body, null, 2));
+  const { name, email, manuscriptId, mID, title, journal, researchField } = req.body;
+  const targetId = manuscriptId || mID;
   if (!email) return res.status(400).json({ error: 'email required' });
 
   const html = wrapper(`
@@ -111,7 +113,7 @@ app.post('/send/manuscript-submitted', async (req, res) => {
     <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:20px;margin:20px 0;">
       <table style="width:100%;border-collapse:collapse;">
         <tr><td style="padding:6px 0;color:#64748b;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;width:40%;">Manuscript ID</td>
-            <td style="padding:6px 0;font-size:14px;font-weight:900;color:#213361;font-family:monospace;">${manuscriptId || 'Pending'}</td></tr>
+            <td style="padding:6px 0;font-size:14px;font-weight:900;color:#213361;font-family:monospace;">${targetId || 'Pending'}</td></tr>
         <tr><td style="padding:6px 0;color:#64748b;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;">Title</td>
             <td style="padding:6px 0;font-size:13px;font-weight:600;color:#334155;">${title || '—'}</td></tr>
         <tr><td style="padding:6px 0;color:#64748b;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;">Journal</td>
@@ -129,7 +131,8 @@ app.post('/send/manuscript-submitted', async (req, res) => {
   `);
 
   try {
-    await sendMail({ to: email, subject: `Manuscript Received – ${manuscriptId || 'New'} | Scholar India Publishers`, html });
+    await sendMail({ to: email, subject: `Manuscript Received – ${targetId || 'New'} | Scholar India Publishers`, html });
+    console.log('✅ Manuscript email sent to:', email);
     res.json({ success: true });
   } catch (e) {
     console.error(e);
