@@ -1728,6 +1728,49 @@ app.post('/send/subadmin-credentials', async (req, res) => {
   catch (e) { res.status(500).json({ error: e.message }); }
 });
 
+
+// ════════════════════════════════════════════════════════════════════════════
+// 18. CERTIFICATE GENERATED NOTIFICATION
+// POST /send/certificate-generated
+// { name, email, reviewerId, journalName, manuscriptTitle, certNo, certUrl }
+// ════════════════════════════════════════════════════════════════════════════
+app.post('/send/certificate-generated', async (req, res) => {
+  const { name, email, reviewerId, journalName, manuscriptTitle, certNo, certUrl } = req.body;
+  if (!email || !reviewerId) return res.status(400).json({ error: 'email and reviewerId required' });
+
+  const verificationUrl = `https://scholarindiapub.com/certificate-verification?id=${encodeURIComponent(reviewerId)}`;
+  const subject = `Your Peer Review Certificate is Ready — Scholar India Publishers`;
+  const html = wrapper(`
+    <p>Dear <strong>${name}</strong>,</p>
+    <p>We are pleased to inform you that your <strong>Peer Review Certificate</strong> has been officially generated and is now available for download.</p>
+
+    <div style="background:#eef5ff; border:1px solid #bfdbfe; border-radius:12px; padding:20px; margin:24px 0;">
+      <table style="width:100%; font-size:13px; border-collapse:collapse;">
+        <tr><td style="color:#64748b; font-weight:700; padding:6px 0; width:38%;">Reviewer / Editor ID:</td><td style="color:#1e3a8a; font-weight:900;">${reviewerId}</td></tr>
+        <tr><td style="color:#64748b; font-weight:700; padding:6px 0;">Certificate No:</td><td style="color:#1e3a8a; font-weight:900;">${certNo || '—'}</td></tr>
+        <tr><td style="color:#64748b; font-weight:700; padding:6px 0;">Journal:</td><td style="font-weight:600;">${journalName || '—'}</td></tr>
+        ${manuscriptTitle ? `<tr><td style="color:#64748b; font-weight:700; padding:6px 0;">Manuscript:</td><td style="font-weight:600;">${manuscriptTitle}</td></tr>` : ''}
+      </table>
+    </div>
+
+    <p style="margin-bottom:20px;">You can download your certificate directly using the button below, or verify its authenticity on our public verification portal using your <strong>Reviewer/Editor ID</strong>.</p>
+
+    <div style="text-align:center; margin:28px 0; display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
+      ${certUrl ? `<a href="${certUrl}" style="background:#198754; color:#fff; padding:12px 24px; border-radius:8px; text-decoration:none; font-weight:800; font-size:13px; display:inline-block;">⬇ Download Certificate</a>` : ''}
+      <a href="${verificationUrl}" style="background:#1e3a8a; color:#fff; padding:12px 24px; border-radius:8px; text-decoration:none; font-weight:800; font-size:13px; display:inline-block;">🔍 Verify Certificate</a>
+    </div>
+
+    <div style="background:#f0fdf4; border-left:4px solid #198754; padding:14px 18px; border-radius:0 8px 8px 0; margin:20px 0; font-size:12px; color:#166534;">
+      <strong>How to verify:</strong> Visit the verification page and enter your Reviewer ID (<strong>${reviewerId}</strong>) to confirm your certificate's authenticity and view the details online.
+    </div>
+
+    <p style="font-size:12px; color:#64748b; margin-top:20px;">If you have any questions, please contact us at <a href="mailto:editor@scholarindiapub.com" style="color:#1e3a8a;">editor@scholarindiapub.com</a>.</p>
+  `, "Certificate Ready", "#198754");
+
+  try { await sendMail({ to: email, subject, html }); res.json({ success: true }); }
+  catch (e) { res.status(500).json({ error: e.message }); }
+});
+
 // ── Start ────────────────────────────────────────────────────────────────────
 const PORT = process.env.PORT || 4001;
 app.listen(PORT, () => {
