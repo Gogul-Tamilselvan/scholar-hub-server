@@ -487,12 +487,12 @@ app.post('/send/status-update', async (req, res) => {
   const b = req.body;
   const d = b.details || {};
   
-  const name = b.name || d.name;
+  const name = esc(b.name || d.name);
   const email = b.email || d.email;
   const status = b.status || d.status;
-  const targetId = b.manuscriptId || b.mID || d.manuscriptId || d.mID;
-  const title = b.manuscriptTitle || b.title || d.manuscriptTitle || d.mTitle || d.title;
-  const journal = b.journalName || b.journal || d.journalName || d.journal;
+  const targetId = esc(b.manuscriptId || b.mID || d.manuscriptId || d.mID);
+  const title = esc(b.manuscriptTitle || b.title || d.manuscriptTitle || d.mTitle || d.title);
+  const journal = esc(b.journalName || b.journal || d.journalName || d.journal);
   const doi = b.doi || d.doi;
   const plag = b.plag || d.plag;
   const reviewerComments = b.reviewerComments || d.reviewerComments;
@@ -515,7 +515,7 @@ app.post('/send/status-update', async (req, res) => {
     const commentsHtml = reviewerComments.map((c, i) => `
       <div style="margin-bottom: 12px; font-size:14px; color:#334155;">
         <strong style="color:#213361;">Reviewer ${i + 1}:</strong><br>
-        <p style="margin:4px 0 0; line-height:1.5; font-style:italic;">"${c}"</p>
+        <p style="margin:4px 0 0; line-height:1.5; font-style:italic;">"${esc(c)}"</p>
       </div>`).join('');
     
     return `
@@ -554,7 +554,7 @@ app.post('/send/status-update', async (req, res) => {
   else if (currentStatus === "accepted") {
     badgeColor = "#16a34a";
     mailHeading = "DECISION: ACCEPTED FOR PUBLICATION";
-    const recText = recommendation ? `with ${recommendation}` : "without any revision";
+    const recText = recommendation ? `with ${esc(recommendation)}` : "without any revision";
     specificMessage = `After careful peer review and editorial evaluation, we are pleased to inform you that your manuscript has been <strong>Accepted</strong> for publication ${recText}. <br><br><strong>Action Required:</strong> You must incorporate the reviewer comments provided below into your final paper before completing the submission steps.`;
     
     actionArea = getFeedbackHtml() + `
@@ -1276,17 +1276,20 @@ app.post('/send/manuscript-submission', async (req, res) => {
   const msId = b.msId || b.manuscriptId || b.mID;
   const title = b.title || b.manuscriptTitle;
   const journal = b.journal || b.journalName;
-  const subject = `Manuscript Received: [ID: ${msId}] - ${journal}`;
+  
+  if (!email || !msId) return res.status(400).json({ error: 'email and msId required' });
+
+  const subject = `Manuscript Received: [ID: ${msId}] - ${esc(journal)}`;
   const html = wrapper(`
-    <p>Dear <strong>${name}</strong>,</p>
+    <p>Dear <strong>${esc(name)}</strong>,</p>
     <p>Thank you for submitting your manuscript to <strong>Scholar India Publishers</strong>.</p>
     <p>Your work has been successfully recorded in our system and is awaiting technical screening by our editorial board.</p>
     <div style="background:#f1f5f9; padding:20px; border-radius:10px; margin:24px 0;">
        <p style="margin:0 0 8px 0; font-size:11px; font-weight:800; color:#213361; text-transform:uppercase;">Submission Details:</p>
        <table style="width:100%; font-size:13px;">
-          <tr><td style="color:#64748b; font-weight:700; width:35%;">Tracking ID:</td><td style="color:#213361; font-weight:900;">${msId}</td></tr>
-          <tr><td style="color:#64748b; font-weight:700;">Title:</td><td>${title}</td></tr>
-          <tr><td style="color:#64748b; font-weight:700;">Journal:</td><td>${journal}</td></tr>
+          <tr><td style="color:#64748b; font-weight:700; width:35%;">Tracking ID:</td><td style="color:#213361; font-weight:900;">${esc(msId)}</td></tr>
+          <tr><td style="color:#64748b; font-weight:700;">Title:</td><td>${esc(title)}</td></tr>
+          <tr><td style="color:#64748b; font-weight:700;">Journal:</td><td>${esc(journal)}</td></tr>
        </table>
     </div>
     <p>You can track the live status of your manuscript anytime using the button below:</p>
@@ -1295,7 +1298,17 @@ app.post('/send/manuscript-submission', async (req, res) => {
     </div>
   `, "Submission Received", "#1e3a8a");
   
-  try { await sendMail({ to: email, subject, html }); res.json({ success: true }); } 
+  try { 
+    // Send to Author
+    await sendMail({ to: email, subject, html }); 
+    // ALSO Send to Admin for notification
+    await sendMail({ 
+      to: FROM, 
+      subject: `NEW MANUSCRIPT SUBMITTED: ${msId}`, 
+      html: `<h3>New Manuscript Submission</h3><p><strong>ID:</strong> ${msId}</p><p><strong>Author:</strong> ${name}</p><p><strong>Journal:</strong> ${journal}</p><p><strong>Title:</strong> ${title}</p>` 
+    });
+    res.json({ success: true }); 
+  } 
   catch (e) { res.status(500).json({ error: e.message }); }
 });
 
