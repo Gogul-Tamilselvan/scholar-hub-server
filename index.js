@@ -66,25 +66,28 @@ async function sendMail({ to, subject, html }) {
   return transporter.sendMail({ from: FROM, to, subject, html });
 }
 
-// ── Shared Styles ────────────────────────────────────────────────────────────
+// ── Shared Styles (Original UI Restoration) ──────────────────────────────────
 const wrapper = (content) => `
 <!DOCTYPE html><html><head><meta charset="utf-8"/></head>
-<body style="margin:0;padding:20px;background:#f1f5f9;font-family:Arial,sans-serif;">
-  <div style="max-width:620px;margin:auto;">
+<body style="margin:0;padding:30px 0;background:#f4f7f6;font-family:Arial,sans-serif;">
+  <div style="max-width:600px;margin:auto;background:#ffffff;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,0.1);overflow:hidden;border:1px solid #e0e0e0;">
     <!-- Header -->
-    <div style="background:#213361;padding:20px 32px;border-radius:10px 10px 0 0;text-align:center;">
-      <h1 style="color:#fff;margin:0;font-size:22px;letter-spacing:0.5px;">Scholar India Publishers</h1>
-      <p style="color:#93c5fd;margin:4px 0 0;font-size:12px;font-style:italic;">International Peer-Reviewed Academic Journals and Book Publishing Excellence Since 2022</p>
+    <div style="background-color:#1a237e;color:#ffffff;text-align:center;padding:35px 20px;">
+      <h1 style="margin:0;font-size:24px;font-weight:900;letter-spacing:1px;">Scholar India Publishers</h1>
+      <p style="margin:8px 0 0;font-size:11px;opacity:0.85;font-style:italic;letter-spacing:0.5px;">
+        International Peer-Reviewed Academic Journals & Book Publishing Excellence
+      </p>
+      <div style="width:40px;height:2px;background:#FFD700;margin:15px auto 0;border-radius:2px;"></div>
     </div>
     <!-- Body -->
-    <div style="background:#fff;padding:32px;border:1px solid #e2e8f0;">
+    <div style="padding:40px;color:#333333;line-height:1.7;">
       ${content}
     </div>
     <!-- Footer -->
-    <div style="background:#213361;padding:16px 32px;border-radius:0 0 10px 10px;text-align:center;">
-      <p style="margin:0;color:#93c5fd;font-size:11px;">© 2026 Scholar India Publishers | Chennai, Tamil Nadu, India</p>
-      <p style="margin:4px 0 0;color:#60a5fa;font-size:11px;">www.scholarindiapub.com</p>
-      <p style="margin:6px 0 0;color:#475569;font-size:10px;">This is a computer-generated email. No signature is required.</p>
+    <div style="background:#1a237e;color:#ffffff;text-align:center;padding:20px;font-size:10px;">
+      <p style="margin:0;">© ${new Date().getFullYear()} Scholar India Publishers | Chennai, India</p>
+      <p style="margin:6px 0 0;"><a href="https://scholarindiapub.com" style="color:#FFD700;text-decoration:none;font-weight:700;">www.scholarindiapub.com</a></p>
+      <p style="margin:10px 0 0;color:#94a3b8;font-size:9px;opacity:0.6;">This is an automated academic notification. Please do not reply directly to this address.</p>
     </div>
   </div>
 </body></html>`;
@@ -105,29 +108,29 @@ app.post('/send/manuscript-submitted', async (req, res) => {
   if (!email) return res.status(400).json({ error: 'email required' });
 
   const html = wrapper(`
-    <p style="color:#1e293b;font-size:15px;">Dear <strong>${name || 'Author'}</strong>,</p>
-    <p style="color:#475569;font-size:14px;line-height:1.7;">
+    <h2 style="color:#1a237e;margin-top:0;margin-bottom:20px;font-size:18px;text-transform:uppercase;letter-spacing:0.5px;border-bottom:1px solid #eee;padding-bottom:15px;">MANUSCRIPT RECEIVED</h2>
+    <p>Dear <strong>${name || 'Author'}</strong>,</p>
+    <p>
       Your manuscript has been successfully submitted to <strong>Scholar India Publishers</strong>. 
       Our editorial team will begin the review process shortly.
     </p>
-    <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:20px;margin:20px 0;">
+    <div style="background:#f8faff;border-left:6px solid #1a237e;padding:25px;border-radius:4px;margin:30px 0;">
       <table style="width:100%;border-collapse:collapse;">
-        <tr><td style="padding:6px 0;color:#64748b;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;width:40%;">Manuscript ID</td>
-            <td style="padding:6px 0;font-size:14px;font-weight:900;color:#213361;font-family:monospace;">${targetId || 'Pending'}</td></tr>
-        <tr><td style="padding:6px 0;color:#64748b;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;">Title</td>
-            <td style="padding:6px 0;font-size:13px;font-weight:600;color:#334155;">${title || '—'}</td></tr>
-        <tr><td style="padding:6px 0;color:#64748b;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;">Journal</td>
-            <td style="padding:6px 0;font-size:13px;color:#334155;">${journal || '—'}</td></tr>
-        ${researchField ? `<tr><td style="padding:6px 0;color:#64748b;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;">Research Field</td>
-            <td style="padding:6px 0;font-size:13px;color:#334155;">${researchField}</td></tr>` : ''}
+        <tr><td style="padding:4px 0;color:#666;font-size:11px;font-weight:700;text-transform:uppercase;width:40%;">Manuscript ID</td>
+            <td style="padding:4px 0;font-size:13px;font-weight:700;color:#1a237e;font-family:monospace;">${targetId || 'Pending'}</td></tr>
+        <tr><td style="padding:4px 0;color:#666;font-size:11px;font-weight:700;text-transform:uppercase;">Title</td>
+            <td style="padding:4px 0;font-size:13px;color:#333;font-weight:600;">${title || '—'}</td></tr>
+        <tr><td style="padding:4px 0;color:#666;font-size:11px;font-weight:700;text-transform:uppercase;">Journal</td>
+            <td style="padding:4px 0;font-size:13px;color:#333;">${journal || '—'}</td></tr>
+        ${researchField ? `<tr><td style="padding:4px 0;color:#666;font-size:11px;font-weight:700;text-transform:uppercase;">Research Field</td>
+            <td style="padding:4px 0;font-size:13px;color:#333;">${researchField}</td></tr>` : ''}
       </table>
     </div>
-    <p style="color:#475569;font-size:13px;line-height:1.6;">
+    <p style="font-size:13px;color:#666;">
       You will receive further updates as your manuscript progresses through peer review. 
       Please retain your Manuscript ID for all future correspondence.
     </p>
-    <hr style="margin:24px 0;border:none;border-top:1px solid #e2e8f0;"/>
-    <p style="color:#94a3b8;font-size:12px;">Best Regards,<br/><strong>Editorial Team</strong><br/>Scholar India Publishers<br/>scholarindiapub@gmail.com</p>
+    <p style="margin-top:30px;border-top:1px solid #eeeeee;padding-top:20px;font-size:12px;color:#666;">Best Regards,<br><strong>Editorial Office</strong><br>Scholar India Publishers</p>
   `);
 
   try {
@@ -151,29 +154,29 @@ app.post('/send/reviewer-applied', async (req, res) => {
 
   const html = wrapper(`
     <div style="text-align:center;margin-bottom:20px;">
-      <span style="background:#dbeafe;color:#1d4ed8;padding:4px 16px;border-radius:20px;font-size:12px;font-weight:700;letter-spacing:0.05em;">APPLICATION RECEIVED</span>
+      <span style="background:#e0f7fa;color:#006064;padding:4px 16px;border-radius:20px;font-size:11px;font-weight:700;letter-spacing:0.05em;border:1px solid #b2ebf2;">APPLICATION RECEIVED</span>
     </div>
-    <p style="color:#1e293b;font-size:15px;">Dear <strong>${name || 'Applicant'}</strong>,</p>
-    <p style="color:#475569;font-size:14px;line-height:1.7;">
+    <h2 style="color:#1a237e;margin-top:0;margin-bottom:20px;font-size:18px;text-transform:uppercase;letter-spacing:0.5px;border-bottom:1px solid #eee;padding-bottom:15px;">APPLICATION STATUS</h2>
+    <p>Dear <strong>${name || 'Applicant'}</strong>,</p>
+    <p>
       Thank you for applying as a <strong>${role || 'Reviewer'}</strong> for 
       <strong>${journal || 'Scholar India Publishers'}</strong>. 
       We have received your application and profile successfully.
     </p>
-    <div style="background:#213361;border-radius:10px;padding:20px;margin:24px 0;text-align:center;">
-      <p style="color:#93c5fd;margin:0 0 6px;font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;">Your Application ID</p>
-      <p style="color:#fff;margin:0;font-size:26px;font-weight:900;font-family:monospace;letter-spacing:0.08em;">${reviewerId || '—'}</p>
+    <div style="background:#f8faff;border-left:6px solid #1a237e;padding:25px;border-radius:4px;margin:30px 0;text-align:center;">
+      <p style="color:#666;margin:0 0 6px;font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;">Your Application ID</p>
+      <p style="color:#1a237e;margin:0;font-size:26px;font-weight:900;font-family:monospace;letter-spacing:0.08em;">${reviewerId || '—'}</p>
     </div>
-    <p style="color:#475569;font-size:14px;line-height:1.6;">
+    <p style="font-size:14px;color:#666;">
       Please save this ID. You can use it to track your application status on our website.
     </p>
-    <div style="text-align:center;margin:24px 0;">
-      <a href="https://scholar-india-publishers.vercel.app/reviewer-search" 
-         style="background:#213361;color:#fff;padding:12px 28px;border-radius:8px;text-decoration:none;font-size:14px;font-weight:700;display:inline-block;">
+    <div style="text-align:center;margin:30px 0;">
+      <a href="https://scholarindiapub.com/reviewer-search" 
+         style="background:#1a237e;color:#fff;padding:12px 28px;border-radius:6px;text-decoration:none;font-size:13px;font-weight:700;display:inline-block;">
         Track Application Status →
       </a>
     </div>
-    <hr style="margin:24px 0;border:none;border-top:1px solid #e2e8f0;"/>
-    <p style="color:#94a3b8;font-size:12px;">Best Regards,<br/><strong>Editorial Office</strong><br/>Scholar India Publishers<br/>scholarindiapub@gmail.com</p>
+    <p style="margin-top:30px;border-top:1px solid #eeeeee;padding-top:20px;font-size:12px;color:#666;">Best Regards,<br><strong>Editorial Office</strong><br/>Scholar India Publishers</p>
   `);
 
   try {
@@ -199,81 +202,98 @@ app.post('/send/payment-invoice', async (req, res) => {
   const inv = invoiceNo || `SIP${Date.now().toString().slice(-8)}`;
 
   const html = wrapper(`
-    <div style="text-align:center;margin-bottom:20px;">
-      <span style="background:#16a34a;color:#fff;padding:5px 20px;border-radius:20px;font-size:12px;font-weight:700;letter-spacing:0.08em;">INVOICE</span>
+    <div style="text-align:center;margin-bottom:24px;">
+      <span style="background:#27ae60;color:#fff;padding:6px 24px;border-radius:20px;font-size:11px;font-weight:800;letter-spacing:0.1em;border-bottom:3px solid rgba(0,0,0,0.1);">OFFICIAL INVOICE</span>
     </div>
 
-    <!-- Invoice Box -->
-    <div style="border:2px solid #213361;border-radius:10px;overflow:hidden;">
+    <!-- Original UI Invoice Structure -->
+    <div style="border:1px solid #1a237e; border-radius:4px; background:#fff; margin-bottom:10px; overflow:hidden;">
       <!-- Invoice Header -->
-      <div style="display:flex;justify-content:space-between;align-items:flex-start;padding:20px 24px;border-bottom:2px solid #213361;">
-        <div style="display:flex;align-items:center;gap:12px;">
-          <div style="width:44px;height:44px;background:#213361;border-radius:8px;display:flex;align-items:center;justify-content:center;">
-            <span style="color:#fff;font-weight:900;font-size:14px;">SIP</span>
-          </div>
-        </div>
-        <div style="text-align:right;">
-          <p style="margin:0;font-size:16px;font-weight:900;color:#213361;text-transform:uppercase;letter-spacing:0.05em;">Invoice / Receipt</p>
-          <p style="margin:4px 0 0;font-size:12px;color:#64748b;">Invoice No: <strong>${inv}</strong></p>
-          <p style="margin:2px 0 0;font-size:12px;color:#64748b;">Date: ${today}</p>
-        </div>
+      <div style="padding:30px 25px; border-bottom:2px solid #1a237e; background:#ffffff;">
+        <table width="100%" cellpadding="0" cellspacing="0" border="0">
+          <tr>
+            <td width="60%" valign="middle">
+              <table cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td valign="middle" style="padding-right:15px;">
+                    <div style="background:#1a237e; color:#ffffff; width:55px; height:55px; line-height:55px; text-align:center; border-radius:10px; font-weight:900; font-size:20px; font-family:Arial, sans-serif;">SIP</div>
+                  </td>
+                  <td valign="middle">
+                    <div style="font-size:10px; color:#666; font-weight:800; text-transform:uppercase; letter-spacing:1.5px; margin-bottom:2px;">Official Receipt</div>
+                    <div style="font-size:12px; color:#1a237e; font-weight:700; text-transform:uppercase;">Scholar India Publishers</div>
+                  </td>
+                </tr>
+              </table>
+            </td>
+            <td width="40%" align="right" valign="middle">
+              <h2 style="margin:0; font-size:22px; color:#1a237e; font-weight:900; text-transform:uppercase; letter-spacing:1px; line-height:1;">Invoice</h2>
+              <div style="margin-top:8px; font-size:11px; line-height:1.4; color:#555;">
+                <strong>No:</strong> <span style="color:#1a237e; font-weight:700;">${inv}</span><br>
+                <strong>Date:</strong> ${today}
+              </div>
+            </td>
+          </tr>
+        </table>
       </div>
 
       <!-- Bill To -->
-      <div style="padding:16px 24px;border-bottom:1px solid #e2e8f0;">
-        <p style="margin:0 0 4px;font-size:11px;font-weight:700;color:#213361;text-transform:uppercase;letter-spacing:0.05em;">Bill To:</p>
-        <p style="margin:0;font-size:14px;font-weight:700;color:#1e293b;">${name || '—'}</p>
-        <p style="margin:2px 0 0;font-size:12px;color:#64748b;">${email}</p>
+      <div style="padding:20px; border-bottom:1px solid #eee;">
+        <p style="margin:0 0 6px; font-size:11px; font-weight:800; color:#1a237e; text-transform:uppercase;">BILL TO:</p>
+        <p style="margin:0; font-size:15px; font-weight:700; color:#333;">${name || '—'}</p>
+        <p style="margin:2px 0 0; font-size:13px; color:#666;">${email}</p>
       </div>
 
       <!-- Service Table -->
-      <div style="padding:0 24px;">
-        <p style="font-size:11px;font-weight:700;color:#213361;text-transform:uppercase;letter-spacing:0.05em;margin:16px 0 8px;">Service Description</p>
-        <table style="width:100%;border-collapse:collapse;">
+      <div style="padding:20px;">
+        <table width="100%" style="border-collapse:collapse; font-size:11px;">
           <thead>
-            <tr style="background:#213361;">
-              <th style="padding:10px 12px;text-align:left;color:#fff;font-size:12px;">Description</th>
-              <th style="padding:10px 12px;text-align:right;color:#fff;font-size:12px;">Amount</th>
+            <tr style="background:#1a237e; color:#fff;">
+              <th align="left" style="padding:10px;">Description</th>
+              <th align="right" style="padding:10px;">Amount</th>
             </tr>
           </thead>
           <tbody>
-            <tr style="border-bottom:1px solid #e2e8f0;">
-              <td style="padding:12px;font-size:13px;color:#334155;">
-                <strong>Article Processing Charges (APC)</strong><br/>
-                <span style="font-size:11px;color:#64748b;">Manuscript ID: ${manuscriptId || '—'}</span><br/>
-                <span style="font-size:11px;color:#64748b;">Title: ${title || '—'}</span>
+            <tr>
+              <td style="padding:15px 10px; border-bottom:1px solid #eee;">
+                <strong style="color:#1a237e; display:block; margin-bottom:4px;">Article Processing Charges (APC)</strong>
+                <span style="font-size:10px; color:#555; display:block;">Manuscript ID: ${manuscriptId || '—'}</span>
+                <span style="font-size:10px; color:#555; display:block;">Title: ${title || '—'}</span>
               </td>
-              <td style="padding:12px;text-align:right;font-size:14px;font-weight:700;color:#213361;">₹${amount || '—'}</td>
+              <td align="right" style="padding:15px 10px; border-bottom:1px solid #eee; font-weight:bold; font-size:14px; color:#1a237e;">₹${amount || '—'}</td>
             </tr>
           </tbody>
         </table>
       </div>
 
       <!-- Payment Info + Total -->
-      <div style="padding:16px 24px;display:flex;justify-content:space-between;align-items:flex-end;border-top:1px solid #e2e8f0;flex-wrap:wrap;gap:12px;">
-        <div>
-          <p style="margin:0 0 4px;font-size:11px;color:#64748b;font-weight:700;text-transform:uppercase;">Payment Information</p>
-          <p style="margin:2px 0;font-size:12px;color:#475569;">Mode: ${paymentMode || '—'}</p>
-          <p style="margin:2px 0;font-size:12px;color:#475569;">Transaction Ref: ${transactionRef || '—'}</p>
-          <p style="margin:2px 0;font-size:12px;color:#475569;">Payment Date: ${today}</p>
-        </div>
-        <div style="text-align:right;">
-          <p style="margin:0;font-size:16px;font-weight:900;color:#213361;">Grand Total: ₹${amount || '—'}</p>
-          <p style="margin:4px 0 0;font-size:12px;font-weight:700;color:#16a34a;">Status: PAID IN FULL</p>
-        </div>
+      <div style="padding:15px 20px;">
+        <table width="100%">
+          <tr>
+            <td width="60%" style="font-size:10px; color:#666; line-height:1.4;">
+              <strong>Payment Information:</strong><br>
+              Mode: ${paymentMode || '—'}<br>
+              Transaction Ref: ${transactionRef || '—'}<br>
+              Payment Date: ${today}
+            </td>
+            <td width="40%" align="right">
+              <p style="font-size:15px; color:#1a237e; margin:0;"><strong>Grand Total: ₹${amount || '—'}</strong></p>
+              <p style="font-size:11px; color:#27ae60; margin:4px 0;"><strong>Status: PAID IN FULL</strong></p>
+            </td>
+          </tr>
+        </table>
       </div>
 
       <!-- Production Note -->
-      <div style="background:#f0fdf4;border-top:2px solid #16a34a;padding:16px 24px;">
-        <p style="margin:0 0 4px;font-size:12px;font-weight:700;color:#15803d;">Production Update:</p>
-        <p style="margin:0;font-size:12px;color:#166534;line-height:1.6;">
-          Your manuscript has been sent to our production department. This process (typesetting, proofing, and archiving) 
-          takes a <strong>minimum of 30 working days</strong>. You will be notified with the DOI details immediately upon publication.
-        </p>
+      <div style="margin:20px; padding:15px; background-color:#e8f5e9; border:1px solid #c8e6c9; border-radius:4px; font-size:12px; color:#2e7d32; line-height:1.6;">
+        <strong>Production Update:</strong><br>
+        Your manuscript has been sent to our production department. This process (typesetting, proofing, and archiving) takes a <strong>minimum of 30 working days</strong>. You will be notified with the DOI details immediately upon publication.
       </div>
     </div>
 
-    <p style="color:#475569;font-size:13px;margin-top:24px;">Best Regards,<br/><strong>Accounts Department</strong><br/>Scholar India Publishers<br/>scholarindiapub@gmail.com</p>
+    <p style="color:#666; font-size:12px; margin-top:30px; border-top:1px solid #eee; padding-top:20px;">Best Regards,<br/><strong>Accounts Department</strong><br/>Scholar India Publishers</p>
+    <div style="margin-top:8px; opacity:0.7; font-size:9px; color:#666; text-align:center;">
+      This is a computer-generated document. No signature is required.
+    </div>
   `);
 
   try {
@@ -296,35 +316,35 @@ app.post('/send/work-assigned', async (req, res) => {
 
   const html = wrapper(`
     <div style="text-align:center;margin-bottom:20px;">
-      <span style="background:#f0fdf4;color:#16a34a;padding:4px 16px;border-radius:20px;font-size:12px;font-weight:700;border:1px solid #bbf7d0;">NEW ASSIGNMENT</span>
+      <span style="background:#f0fdf4;color:#16a34a;padding:4px 16px;border-radius:20px;font-size:11px;font-weight:700;border:1.5px solid #16a34a;">NEW ASSIGNMENT</span>
     </div>
-    <p style="color:#1e293b;font-size:15px;">Dear <strong>${name || 'Reviewer'}</strong>,</p>
-    <p style="color:#475569;font-size:14px;line-height:1.7;">
+    <h2 style="color:#1a237e;margin-top:0;margin-bottom:20px;font-size:18px;text-transform:uppercase;letter-spacing:0.5px;border-bottom:1px solid #eee;padding-bottom:15px;">WORK ASSIGNED</h2>
+    <p>Dear <strong>${name || 'Reviewer'}</strong>,</p>
+    <p>
       A manuscript has been assigned to you for peer review. Please log in to your Reviewer Dashboard to accept or review the assignment.
     </p>
-    <div style="background:#f8fafc;border:1px solid #e2e8f0;border-left:4px solid #213361;border-radius:0 10px 10px 0;padding:20px;margin:20px 0;">
+    <div style="background:#f8faff;border-left:6px solid #1a237e;border-radius:4px;padding:25px;margin:30px 0;">
       <table style="width:100%;border-collapse:collapse;">
-        <tr><td style="padding:6px 0;color:#64748b;font-size:12px;font-weight:700;text-transform:uppercase;width:40%;">Reviewer ID</td>
-            <td style="padding:6px 0;font-size:13px;font-family:monospace;font-weight:700;color:#213361;">${reviewerId || '—'}</td></tr>
-        <tr><td style="padding:6px 0;color:#64748b;font-size:12px;font-weight:700;text-transform:uppercase;">Manuscript ID</td>
-            <td style="padding:6px 0;font-size:13px;font-family:monospace;font-weight:700;color:#213361;">${manuscriptId || '—'}</td></tr>
-        <tr><td style="padding:6px 0;color:#64748b;font-size:12px;font-weight:700;text-transform:uppercase;">Title</td>
-            <td style="padding:6px 0;font-size:13px;color:#334155;font-weight:600;">${manuscriptTitle || '—'}</td></tr>
-        <tr><td style="padding:6px 0;color:#64748b;font-size:12px;font-weight:700;text-transform:uppercase;">Due Date</td>
-            <td style="padding:6px 0;font-size:13px;color:#dc2626;font-weight:700;">${dueDate || 'As soon as possible'}</td></tr>
+        <tr><td style="padding:6px 0;color:#666;font-size:11px;font-weight:800;text-transform:uppercase;width:40%;">Reviewer ID</td>
+            <td style="padding:6px 0;font-size:13px;font-family:monospace;font-weight:900;color:#1a237e;">${reviewerId || '—'}</td></tr>
+        <tr><td style="padding:6px 0;color:#666;font-size:11px;font-weight:800;text-transform:uppercase;">Manuscript ID</td>
+            <td style="padding:6px 0;font-size:13px;font-family:monospace;font-weight:900;color:#1a237e;">${manuscriptId || '—'}</td></tr>
+        <tr><td style="padding:6px 0;color:#666;font-size:11px;font-weight:800;text-transform:uppercase;">Title</td>
+            <td style="padding:6px 0;font-size:13px;color:#333;font-weight:600;">${manuscriptTitle || '—'}</td></tr>
+        <tr><td style="padding:6px 0;color:#666;font-size:11px;font-weight:800;text-transform:uppercase;">Due Date</td>
+            <td style="padding:6px 0;font-size:13px;color:#dc2626;font-weight:800;">${dueDate || 'As soon as possible'}</td></tr>
       </table>
     </div>
     ${manuscriptLink ? `
-    <div style="text-align:center;margin:24px 0;">
-      <a href="${manuscriptLink}" style="background:#213361;color:#fff;padding:12px 28px;border-radius:8px;text-decoration:none;font-size:14px;font-weight:700;display:inline-block;">
+    <div style="text-align:center;margin:30px 0;">
+      <a href="${manuscriptLink}" style="background:#1a237e;color:#fff;padding:12px 28px;border-radius:6px;text-decoration:none;font-size:13px;font-weight:700;display:inline-block;">
         View Manuscript →
       </a>
     </div>` : ''}
-    <p style="color:#475569;font-size:13px;line-height:1.6;">
+    <p style="font-size:13px;color:#666;">
       Please submit your review before the due date. For any queries, contact us at scholarindiapub@gmail.com.
     </p>
-    <hr style="margin:24px 0;border:none;border-top:1px solid #e2e8f0;"/>
-    <p style="color:#94a3b8;font-size:12px;">Best Regards,<br/><strong>Editorial Team</strong><br/>Scholar India Publishers</p>
+    <p style="margin-top:30px;border-top:1px solid #eeeeee;padding-top:20px;font-size:12px;color:#666;">Best Regards,<br><strong>Editorial Office</strong><br>Scholar India Publishers</p>
   `);
 
   try {
@@ -347,36 +367,35 @@ app.post('/send/final-accepted', async (req, res) => {
 
   const html = wrapper(`
     <div style="text-align:center;margin-bottom:24px;">
-      <div style="width:60px;height:60px;background:#f0fdf4;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;border:2px solid #16a34a;">
-        <span style="font-size:28px;">✓</span>
+      <div style="width:60px;height:60px;background:#f0fdf4;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;border:3px solid #16a34a;margin-bottom:15px;">
+        <span style="font-size:32px;color:#16a34a;">✓</span>
       </div>
-      <h2 style="color:#15803d;margin:12px 0 4px;font-size:20px;">Approved for Publication!</h2>
-      <p style="color:#64748b;margin:0;font-size:13px;">Congratulations on this milestone</p>
+      <h2 style="color:#16a34a;margin:0;font-size:22px;text-transform:uppercase;letter-spacing:1px;">Approved for Publication!</h2>
+      <p style="color:#666;margin:5px 0 0;font-size:13px;font-weight:700;">Congratulations on this milestone</p>
     </div>
-    <p style="color:#1e293b;font-size:15px;">Dear <strong>${name || 'Author'}</strong>,</p>
-    <p style="color:#475569;font-size:14px;line-height:1.7;">
+    <p>Dear <strong>${name || 'Author'}</strong>,</p>
+    <p>
       We are pleased to inform you that your manuscript has been <strong>approved for production</strong> and will be published in 
       <strong>${journal || 'Scholar India Publishers'}</strong>.
     </p>
-    <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:20px;margin:20px 0;">
+    <div style="background:#f8faff;border-left:6px solid #16a34a;border-radius:4px;padding:25px;margin:30px 0;">
       <table style="width:100%;border-collapse:collapse;">
-        <tr><td style="padding:6px 0;color:#64748b;font-size:12px;font-weight:700;text-transform:uppercase;width:40%;">Manuscript ID</td>
-            <td style="padding:6px 0;font-size:14px;font-family:monospace;font-weight:900;color:#15803d;">${manuscriptId || '—'}</td></tr>
-        <tr><td style="padding:6px 0;color:#64748b;font-size:12px;font-weight:700;text-transform:uppercase;">Title</td>
-            <td style="padding:6px 0;font-size:13px;color:#334155;font-weight:600;">${title || '—'}</td></tr>
-        <tr><td style="padding:6px 0;color:#64748b;font-size:12px;font-weight:700;text-transform:uppercase;">Journal</td>
-            <td style="padding:6px 0;font-size:13px;color:#334155;">${journal || '—'}</td></tr>
+        <tr><td style="padding:6px 0;color:#666;font-size:11px;font-weight:800;text-transform:uppercase;width:40%;">Manuscript ID</td>
+            <td style="padding:6px 0;font-size:14px;font-family:monospace;font-weight:900;color:#16a34a;">${manuscriptId || '—'}</td></tr>
+        <tr><td style="padding:6px 0;color:#666;font-size:11px;font-weight:800;text-transform:uppercase;">Title</td>
+            <td style="padding:6px 0;font-size:13px;color:#333;font-weight:600;">${title || '—'}</td></tr>
+        <tr><td style="padding:6px 0;color:#666;font-size:11px;font-weight:800;text-transform:uppercase;">Journal</td>
+            <td style="padding:6px 0;font-size:13px;color:#333;">${journal || '—'}</td></tr>
       </table>
     </div>
-    <div style="background:#fefce8;border:1px solid #fde68a;border-radius:10px;padding:16px 20px;margin:16px 0;">
-      <p style="margin:0 0 4px;font-size:12px;font-weight:700;color:#92400e;">Production Timeline:</p>
-      <p style="margin:0;font-size:13px;color:#78350f;line-height:1.6;">
-        The production process (typesetting, proofing, and archiving) takes a minimum of <strong>30 working days</strong>. 
-        You will be notified with the DOI details immediately upon publication.
+    <div style="background:#fffcf0;border:1px solid #fde68a;border-left:6px solid #fbbf24;padding:20px;border-radius:8px;margin:25px 0;">
+      <p style="margin:0 0 6px;font-size:13px;font-weight:800;color:#92400e;">Production Timeline:</p>
+      <p style="margin:0;font-size:12px;color:#78350f;line-height:1.7;">
+        The production process (typesetting, formatting, and final archiving) takes a minimum of <strong>30 working days</strong>. 
+        You will receive the DOI details and the publication link immediately once it goes live.
       </p>
     </div>
-    <hr style="margin:24px 0;border:none;border-top:1px solid #e2e8f0;"/>
-    <p style="color:#94a3b8;font-size:12px;">Congratulations once again!<br/><strong>Editorial Board</strong><br/>Scholar India Publishers<br/>scholarindiapub@gmail.com</p>
+    <p style="margin-top:30px;border-top:1px solid #eeeeee;padding-top:20px;font-size:12px;color:#666;">Best Regards,<br><strong>Editorial Board</strong><br>Scholar India Publishers</p>
   `);
 
   try {
@@ -399,39 +418,38 @@ app.post('/send/reviewer-approved', async (req, res) => {
 
   const html = wrapper(`
     <div style="text-align:center;margin-bottom:24px;">
-      <div style="width:60px;height:60px;background:#eff6ff;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;border:2px solid #2563eb;">
-        <span style="font-size:26px;">🎓</span>
+      <div style="width:60px;height:60px;background:#f0f7ff;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;border:3px solid #1a237e;margin-bottom:15px;">
+        <span style="font-size:32px;">🎓</span>
       </div>
-      <h2 style="color:#1d4ed8;margin:12px 0 4px;font-size:20px;">Welcome to Our Editorial Panel!</h2>
-      <p style="color:#64748b;margin:0;font-size:13px;">Your application has been approved</p>
+      <h2 style="color:#1a237e;margin:0;font-size:22px;text-transform:uppercase;letter-spacing:1px;">Welcome to Our Editorial Panel!</h2>
+      <p style="color:#666;margin:5px 0 0;font-size:13px;font-weight:700;">Your application has been approved</p>
     </div>
-    <p style="color:#1e293b;font-size:15px;">Dear <strong>${name || 'Applicant'}</strong>,</p>
-    <p style="color:#475569;font-size:14px;line-height:1.7;">
+    <p>Dear <strong>${name || 'Applicant'}</strong>,</p>
+    <p>
       We are delighted to inform you that your application to join Scholar India Publishers as a 
       <strong>${role || 'Reviewer'}</strong> has been <strong style="color:#16a34a;">APPROVED</strong>. 
       You are now an active member of our editorial community.
     </p>
-    <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:10px;padding:20px;margin:20px 0;">
+    <div style="background:#f8faff;border-left:6px solid #1a237e;border-radius:4px;padding:25px;margin:30px 0;">
       <table style="width:100%;border-collapse:collapse;">
-        <tr><td style="padding:6px 0;color:#64748b;font-size:12px;font-weight:700;text-transform:uppercase;width:40%;">Your ID</td>
-            <td style="padding:6px 0;font-size:14px;font-family:monospace;font-weight:900;color:#1d4ed8;">${reviewerId || '—'}</td></tr>
-        <tr><td style="padding:6px 0;color:#64748b;font-size:12px;font-weight:700;text-transform:uppercase;">Role</td>
-            <td style="padding:6px 0;font-size:13px;font-weight:700;color:#213361;">${role || '—'}</td></tr>
-        <tr><td style="padding:6px 0;color:#64748b;font-size:12px;font-weight:700;text-transform:uppercase;">Journal</td>
-            <td style="padding:6px 0;font-size:13px;color:#334155;">${journal || '—'}</td></tr>
-        <tr><td style="padding:6px 0;color:#64748b;font-size:12px;font-weight:700;text-transform:uppercase;">Status</td>
-            <td style="padding:6px 0;"><span style="background:#dcfce7;color:#16a34a;padding:2px 12px;border-radius:20px;font-size:12px;font-weight:700;">ACTIVE</span></td></tr>
+        <tr><td style="padding:6px 0;color:#666;font-size:11px;font-weight:800;text-transform:uppercase;width:40%;">Your ID</td>
+            <td style="padding:6px 0;font-size:14px;font-family:monospace;font-weight:900;color:#1a237e;">${reviewerId || '—'}</td></tr>
+        <tr><td style="padding:6px 0;color:#666;font-size:11px;font-weight:800;text-transform:uppercase;">Role</td>
+            <td style="padding:6px 0;font-size:13px;font-weight:700;color:#333;">${role || '—'}</td></tr>
+        <tr><td style="padding:6px 0;color:#666;font-size:11px;font-weight:800;text-transform:uppercase;">Journal</td>
+            <td style="padding:6px 0;font-size:13px;color:#333;">${journal || '—'}</td></tr>
+        <tr><td style="padding:6px 0;color:#666;font-size:11px;font-weight:800;text-transform:uppercase;">Status</td>
+            <td style="padding:6px 0;"><span style="background:#dcfce7;color:#16a34a;padding:2px 12px;border-radius:20px;font-size:11px;font-weight:800;border:1px solid #16a34a;">ACTIVE</span></td></tr>
       </table>
     </div>
-    ${message ? `<div style="background:#f8fafc;border-left:4px solid #213361;padding:12px 16px;border-radius:0 8px 8px 0;margin:16px 0;">
-      <p style="margin:0;font-size:13px;color:#475569;font-style:italic;">"${message}"</p>
+    ${message ? `<div style="background:#f8fafc;border-left:4px solid #1a237e;padding:15px;border-radius:0 8px 8px 0;margin:16px 0;">
+      <p style="margin:0;font-size:13px;color:#444;font-style:italic;">"${message}"</p>
     </div>` : ''}
-    <p style="color:#475569;font-size:13px;line-height:1.6;">
+    <p style="font-size:13px;color:#666;line-height:1.6;">
       You will be contacted when manuscripts are assigned to you for review. 
-      Please log in to your <a href="https://scholar-india-publishers.vercel.app/reviewer-dashboard" style="color:#213361;font-weight:700;">Reviewer Dashboard</a> to manage your profile.
+      Please log in to your <a href="https://scholarindiapub.com/reviewer-dashboard" style="color:#1a237e;font-weight:700;">Reviewer Dashboard</a> to manage your profile.
     </p>
-    <hr style="margin:24px 0;border:none;border-top:1px solid #e2e8f0;"/>
-    <p style="color:#94a3b8;font-size:12px;">Welcome to the team!<br/><strong>Editorial Office</strong><br/>Scholar India Publishers<br/>scholarindiapub@gmail.com</p>
+    <p style="margin-top:30px;border-top:1px solid #eeeeee;padding-top:20px;font-size:12px;color:#666;">Best Regards,<br><strong>Editorial Office</strong><br>Scholar India Publishers</p>
   `);
 
   try {
@@ -486,21 +504,23 @@ app.post('/send/status-update', async (req, res) => {
       </div>`).join('');
     
     return `
-      <div style="background:#f8fafc; border:1px solid #e2e8f0; padding:20px; border-radius:10px; margin:24px 0;">
-        <p style="margin:0 0 16px 0; color:#1e293b; font-weight:800; font-size:13px; text-transform:uppercase; letter-spacing:0.05em;">Peer Reviewer Feedback:</p>
+      <div style="background:#f8f9fa; border:1px solid #dee2e6; padding:20px; border-radius:10px; margin:24px 0;">
+        <p style="margin:0 0 16px 0; color:#333; font-weight:bold; font-size:15px;">Reviewer Comments:</p>
         ${commentsHtml}
       </div>`;
   };
 
   const navDashboard = `
-    <div style="background:#f8fafc; padding:24px; border-radius:12px; margin-top:32px; border:1px solid #e2e8f0;">
-      <p style="margin:0 0 16px 0; font-weight:800; color:#213361; font-size:11px; text-align:center; text-transform:uppercase; letter-spacing:0.1em;">Author Services & Quick Links</p>
-      <div style="display:flex; gap:12px; margin-bottom:12px;">
-        <a href="https://scholarindiapub.com/submit" style="flex:1; background:#213361; color:#ffffff; padding:12px; border-radius:6px; text-decoration:none; text-align:center; font-size:12px; font-weight:700;">Submit Manuscript</a>
-        <a href="https://scholarindiapub.com/manuscript-track" style="flex:1; background:#213361; color:#ffffff; padding:12px; border-radius:6px; text-decoration:none; text-align:center; font-size:12px; font-weight:700;">Track Progress</a>
-      </div>
-      <a href="https://scholarindiapub.com/commerce-management" style="display:block; background:#fff; border:2px solid #213361; color:#213361; padding:12px; border-radius:6px; text-decoration:none; text-align:center; font-size:12px; font-weight:700; margin-bottom:10px;">Scholar Journal of Commerce and Management</a>
-      <a href="https://scholarindiapub.com/humanities" style="display:block; background:#fff; border:2px solid #213361; color:#213361; padding:12px; border-radius:6px; text-decoration:none; text-align:center; font-size:12px; font-weight:700;">Scholar Journal of Humanities and Social Sciences</a>
+    <div style="background:#f8f9fa; padding:20px; border-radius:10px; margin-top:30px; border:1px solid #dee2e6;">
+      <p style="margin:0 0 15px 0; font-weight:bold; color:#1a237e; font-size:12px; text-align:center; text-transform:uppercase; letter-spacing:0.1em;">Author Services & Journals</p>
+      <table width="100%" cellpadding="4" cellspacing="0" style="margin-bottom:10px;">
+        <tr>
+          <td><a href="https://scholarindiapub.com/submit" style="display:block; background:#1a237e; color:#ffffff; padding:10px; border-radius:4px; text-decoration:none; text-align:center; font-size:11px; font-weight:bold;">Manuscript Submission</a></td>
+          <td><a href="https://scholarindiapub.com/manuscript-track" style="display:block; background:#1a237e; color:#ffffff; padding:10px; border-radius:4px; text-align:center; font-size:11px; font-weight:bold;">Track Manuscript</a></td>
+        </tr>
+      </table>
+      <a href="https://scholarindiapub.com/commerce-management" style="display:block; background:#ffffff; border:2px solid #1a237e; color:#1a237e; padding:12px; border-radius:4px; text-decoration:none; text-align:center; font-size:12px; font-weight:bold; margin-bottom:8px;">Scholar Journal of Commerce and Management</a>
+      <a href="https://scholarindiapub.com/humanities" style="display:block; background:#ffffff; border:2px solid #1a237e; color:#1a237e; padding:12px; border-radius:4px; text-decoration:none; text-align:center; font-size:12px; font-weight:bold; margin-bottom:12px;">Scholar Journal of Humanities and Social Sciences</a>
     </div>`;
 
   // Status Logic
@@ -523,11 +543,11 @@ app.post('/send/status-update', async (req, res) => {
     specificMessage = `After careful peer review and editorial evaluation, we are pleased to inform you that your manuscript has been <strong>Accepted</strong> for publication ${recText}. <br><br><strong>Action Required:</strong> You must incorporate the reviewer comments provided below into your final paper before completing the submission steps.`;
     
     actionArea = getFeedbackHtml() + `
-      <div style="background:#f0fdf4; border:1px solid #bbf7d0; padding:24px; border-radius:12px; margin:24px 0;">
-        <p style="margin:0 0 16px 0; color:#166534; font-weight:800; font-size:14px; text-transform:uppercase;">Next Steps (Complete within 10 days):</p>
-        <a href="https://scholarindiapub.com/final-paper" style="display:block; background:#16a34a; color:#fff; padding:14px; text-decoration:none; border-radius:8px; font-weight:700; font-size:14px; text-align:center; margin-bottom:16px; box-shadow:0 4px 6px -1px rgba(0,0,0,0.1);">Complete Final Submission Step →</a>
-        <p style="font-size:12px; color:#991b1b; margin:0; line-height:1.6; border-top:1px solid #dcfce7; padding-top:12px; font-weight:600;">
-          ⚠️ <strong>IMPORTANT:</strong> Final submission must be completed within 10 days. Late submissions may lead to automatic rejection without further notice.
+      <div style="background:#f0f9f1; border:1px solid #198754; padding:20px; border-radius:8px; margin:20px 0;">
+        <p style="margin:0 0 15px 0; color:#198754; font-weight:bold; font-size:15px;">Next Steps (Complete within 10 days):</p>
+        <div style="margin-bottom:12px;"><a href="https://scholarindiapub.com/final-paper" style="display:block; background:#ffffff; border:1px solid #198754; color:#198754; padding:10px; text-decoration:none; border-radius:5px; font-weight:bold; font-size:13px; text-align:center;">STEP 1: Complete Copyright Form, Final Paper in the Template & Payment</a></div>
+        <p style="font-size:12px; color:#d63031; margin:0; line-height:1.5; border-top:1px solid #d1e7dd; padding-top:10px; font-weight:bold;">
+          ⚠️ IMPORTANT: Please complete all steps within 10 days. If any step is not completed, your paper will be automatically rejected for publication without further notification.
         </p>
       </div>`;
   }
@@ -537,24 +557,25 @@ app.post('/send/status-update', async (req, res) => {
     specificMessage = `After careful peer review and editorial evaluation, we are pleased to inform you that your manuscript has been <strong>Accepted</strong> for publication under our <strong>Complimentary Waiver (No APC Required)</strong> program. <br><br><strong>Note:</strong> You must incorporate the reviewer comments provided below into your final paper before finishing the process.`;
     
     actionArea = getFeedbackHtml() + `
-      <div style="background:#ecfeff; border:1px solid #cffafe; padding:24px; border-radius:12px; margin:24px 0;">
-        <p style="margin:0 0 16px 0; color:#0e7490; font-weight:800; font-size:14px; text-transform:uppercase;">Final Steps (Complete within 10 days):</p>
-        <a href="https://scholarindiapub.com/final-paper" style="display:block; background:#0891b2; color:#fff; padding:14px; text-decoration:none; border-radius:8px; font-weight:700; font-size:14px; text-align:center; margin-bottom:16px;">Finish Final Paper Submission →</a>
-        <p style="font-size:12px; color:#991b1b; margin:0; line-height:1.6; border-top:1px solid #e0faff; padding-top:12px; font-weight:600;">
-          ⚠️ <strong>IMPORTANT:</strong> Please complete within 10 days to secure your publication slot.
+      <div style="background:#e0f7fa; border:1px solid #17a2b8; padding:20px; border-radius:8px; margin:20px 0;">
+         <p style="margin:0 0 15px 0; color:#006064; font-weight:bold; font-size:15px;">Next Steps (Complete within 10 days):</p>
+         <div style="margin-bottom:12px;"><a href="https://scholarindiapub.com/final-paper" style="display:block; background:#ffffff; border:1px solid #17a2b8; color:#006064; padding:10px; text-decoration:none; border-radius:5px; font-weight:bold; font-size:13px; text-align:center;">Final Step: Complete Copyright Form and Final Paper in the Template</a></div>
+        <p style="font-size:12px; color:#d63031; margin:0; line-height:1.5; border-top:1px solid #b2ebf2; padding-top:10px; font-weight:bold;">
+          ⚠️ IMPORTANT: Please complete all steps within 10 days. If any step is not completed, your paper will be automatically rejected for publication without further notification.
         </p>
       </div>`;
   }
   else if (currentStatus === "rejected") {
-    badgeColor = "#dc2626";
+    badgeColor = "#dc3545";
     mailHeading = "DECISION: MANUSCRIPT REJECTED";
-    specificMessage = `Thank you for your submission to Scholar India Publishers. After a thorough technical evaluation, we regret to inform you that your manuscript has been <strong>Rejected</strong> for publication. This decision was based on internal editorial standards and peer observations.`;
-    actionArea = `<div style="background:#fef2f2; border:1px solid #fee2e2; padding:20px; border-radius:10px; margin:24px 0;"><p style="font-size:13px; color:#334155; margin:0;"><strong>Primary Observation:</strong> Technical/Peer Review criteria not satisfied ${plag ? `(Plagiarism: ${plag})` : ''}.</p></div>`;
+    specificMessage = `Thank you for your submission. After careful technical evaluation, we regret to inform you that your manuscript has been <strong>Rejected</strong> for publication. This decision was made based on the following reviewer observations and editorial standards.`;
+    const reasonText = b.reason || d.reason || `Technical/Peer Review criteria not satisfied ${plag ? `(Plagiarism: ${plag})` : ''}.`;
+    actionArea = `<div style="background:#fff5f5; border:1px solid #dc3545; padding:15px; border-radius:8px; margin:20px 0;"><p style="font-size:13px; color:#333; margin:0;"><strong>Primary Reason:</strong> ${reasonText}</p></div>`;
   }
   else if (currentStatus === "published") {
-    badgeColor = "#2563eb";
+    badgeColor = "#0d6efd";
     mailHeading = "PUBLICATION NOTIFICATION";
-    const jName = (journalName || "").toLowerCase();
+    const jName = (journal || journalName || "").toLowerCase();
     let currentIssueLink = "https://scholarindiapub.com/";
     if (jName.includes("commerce") || jName.includes("management")) currentIssueLink = "https://scholarindiapub.com/commerce-management#current-issue";
     else if (jName.includes("humanities") || jName.includes("social")) currentIssueLink = "https://scholarindiapub.com/humanities#current-issue";
@@ -562,13 +583,13 @@ app.post('/send/status-update', async (req, res) => {
     specificMessage = `Congratulations! Your latest research article has been <strong>Published</strong> and is now officially part of our digital library. We thank you for choosing us as your publishing partner and look forward to your future contributions.`;
     
     actionArea = `
-      <div style="background:#eff6ff; padding:24px; border-radius:12px; margin:24px 0; border:1px solid #dbeafe; text-align:center;">
-        <p style="margin:0 0 16px 0; font-size:13px; color:#1e3a8a;"><strong>Digital Object Identifier (DOI):</strong></p>
-        <a href="${doi || '#'}" style="color:#2563eb; font-weight:900; font-size:15px; text-decoration:none; word-break:break-all; display:block; margin-bottom:20px;">${doi || 'DOI Pending'}</a>
-        <a href="${currentIssueLink}" style="background:#2563eb; color:#ffffff; padding:12px 24px; border-radius:6px; text-decoration:none; font-size:13px; font-weight:700; display:inline-block;">VIEW CURRENT ISSUE →</a>
+      <div style="background:#eef5ff; padding:15px; border-radius:8px; margin:20px 0; border:1px solid #d0e3ff; text-align:center;">
+        <p style="margin:0 0 10px 0; font-size:13px; color:#333;"><strong>Official DOI:</strong></p>
+        <a href="${doi || '#'}" style="color:#0d6efd; font-weight:bold; font-size:15px; text-decoration:none; word-break:break-all; display:block; margin-bottom:15px;">${doi || 'DOI Pending'}</a>
+        <a href="${currentIssueLink}" style="background:#0d6efd; color:#ffffff; padding:10px 20px; border-radius:4px; text-decoration:none; font-size:12px; font-weight:bold; display:inline-block;">VIEW CURRENT ISSUE →</a>
       </div>
-      <div style="background:#fffcf0; padding:20px; border-left:5px solid #fbbf24; border-radius:8px; margin:24px 0; font-size:14px; color:#451a03; line-height:1.6;">
-        <strong style="color:#92400e; font-size:15px; display:block; margin-bottom:8px;">🚀 Maximize Your Research Impact!</strong>
+      <div style="background:#fff9e6; padding:15px; border-left:5px solid #ffc107; border-radius:6px; margin:20px 0; font-size:14px; color:#333; line-height:1.6;">
+        <strong style="color:#b38600; font-size:15px; display:block; margin-bottom:8px;">🚀 Maximize Your Research Impact!</strong>
         We highly encourage you to upload your published paper's PDF to platforms like <strong>ResearchGate</strong> and <strong>Academia.edu</strong>. Sharing your work widely is a proven way to increase global visibility and attract citations.
       </div>`;
   }
@@ -578,31 +599,30 @@ app.post('/send/status-update', async (req, res) => {
       <span style="background:${badgeColor}20; color:${badgeColor}; padding:6px 16px; border-radius:20px; font-size:12px; font-weight:800; border:1.5px solid ${badgeColor}; text-transform:uppercase; letter-spacing:0.05em;">${status}</span>
     </div>
     
-    <h2 style="color:${badgeColor}; margin:0 0 24px; font-size:20px; text-align:center; font-weight:900; letter-spacing:-0.02em;">${mailHeading}</h2>
+    <h2 style="color:${badgeColor}; margin:0 0 24px; font-size:18px; text-align:center; font-weight:900; letter-spacing:0.5px; text-transform:uppercase; border-bottom:1px solid #eee; padding-bottom:15px;">${mailHeading}</h2>
     
-    <p style="color:#1e293b; font-size:15px;">Dear <strong>${name || 'Author'}</strong>,</p>
-    <p style="color:#475569; font-size:14px; line-height:1.8;">${specificMessage}</p>
+    <p>Dear <strong>${name || 'Author'}</strong>,</p>
+    <p>${specificMessage}</p>
     
-    <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:20px; margin:24px 0;">
+    <div style="background-color:#f8faff; border-left:6px solid #1a237e; border-radius:4px; padding:25px; margin:30px 0;">
       <table style="width:100%; border-collapse:collapse;">
-        <tr><td style="padding:6px 0; color:#64748b; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.05em; width:35%;">Manuscript ID</td>
-            <td style="padding:6px 0; font-size:14px; font-weight:900; color:#213361; font-family:monospace;">${targetId || '—'}</td></tr>
-        <tr><td style="padding:6px 0; color:#64748b; font-size:11px; font-weight:800; text-transform:uppercase;">Journal</td>
-            <td style="padding:6px 0; font-size:13px; color:#334155;">${journal || '—'}</td></tr>
-        <tr><td style="padding:6px 0; color:#64748b; font-size:11px; font-weight:800; text-transform:uppercase;">Title</td>
-            <td style="padding:6px 0; font-size:13px; color:#334155; font-weight:600; line-height:1.5;">${title || 'Untitled'}</td></tr>
+        <tr><td style="padding:6px 0; color:#666; font-size:12px; font-weight:800; text-transform:uppercase; width:35%;">Manuscript ID</td>
+            <td style="padding:6px 0; font-size:14px; font-weight:900; color:#1a237e; font-family:monospace;">${targetId || '—'}</td></tr>
+        <tr><td style="padding:6px 0; color:#666; font-size:12px; font-weight:800; text-transform:uppercase;">Journal</td>
+            <td style="padding:6px 0; font-size:13px; color:#333;">${journal || '—'}</td></tr>
+        <tr><td style="padding:6px 0; color:#666; font-size:12px; font-weight:800; text-transform:uppercase;">Title</td>
+            <td style="padding:6px 0; font-size:13px; color:#333; font-weight:600; line-height:1.5;">${title || 'Untitled Manuscript'}</td></tr>
       </table>
     </div>
 
     ${actionArea}
     ${navDashboard}
 
-    <div style="margin-top:32px; padding-top:24px; border-top:1.5px solid #f1f5f9; color:#94a3b8; font-size:12px; line-height:1.6;">
-      Warmest Regards,<br/>
-      <strong style="color:#475569; font-size:13px;">Editorial Office</strong><br/>
-      Scholar India Publishers<br/>
-      scholarindiapub@gmail.com
-    </div>
+    <p style="margin-top:30px; border-top:1px solid #eeeeee; padding-top:20px; font-size:12px; color:#666;">
+      Best Regards,<br/>
+      <strong>Editorial Office</strong><br/>
+      Scholar India Publishers
+    </p>
   `);
 
   try {
@@ -640,14 +660,16 @@ app.post('/send/reviewer-status-update', async (req, res) => {
   let content = "";
 
   const navDashboard = `
-    <div style="background:#f8fafc; padding:20px; border-radius:10px; margin-top:30px; border:1px solid #e2e8f0;">
-      <p style="margin:0 0 15px 0; font-weight:800; color:#213361; font-size:11px; text-align:center; text-transform:uppercase; letter-spacing:0.1em;">Quick Links</p>
-      <div style="display:flex; gap:12px; margin-bottom:12px;">
-        <a href="https://scholarindiapub.com/submit" style="flex:1; background:#213361; color:#ffffff; padding:10px; border-radius:4px; text-decoration:none; text-align:center; font-size:11px; font-weight:700;">Submit Manuscript</a>
-        <a href="https://scholarindiapub.com/manuscript-track" style="flex:1; background:#213361; color:#ffffff; padding:10px; border-radius:4px; text-decoration:none; text-align:center; font-size:11px; font-weight:700;">Track Status</a>
-      </div>
-      <a href="https://scholarindiapub.com/commerce-management" style="display:block; background:#fff; border:1px solid #e2e8f0; color:#213361; padding:10px; border-radius:4px; text-decoration:none; text-align:center; font-size:11px; font-weight:700; margin-bottom:5px;">Scholar Journal of Commerce & Mgmt.</a>
-      <a href="https://scholarindiapub.com/humanities" style="display:block; background:#fff; border:1px solid #e2e8f0; color:#213361; padding:10px; border-radius:4px; text-decoration:none; text-align:center; font-size:11px; font-weight:700;">Scholar Journal of Humanities & Social Sciences</a>
+    <div style="background:#f8f9fa; padding:20px; border-radius:10px; margin-top:30px; border:1px solid #dee2e6;">
+      <p style="margin:0 0 15px 0; font-weight:bold; color:#1a237e; font-size:12px; text-align:center; text-transform:uppercase; letter-spacing:0.1em;">Quick Links</p>
+      <table width="100%" cellpadding="4" cellspacing="0" style="margin-bottom:10px;">
+        <tr>
+          <td><a href="https://scholarindiapub.com/submit" style="display:block; background:#1a237e; color:#ffffff; padding:10px; border-radius:4px; text-decoration:none; text-align:center; font-size:11px; font-weight:bold;">Submit Manuscript</a></td>
+          <td><a href="https://scholarindiapub.com/manuscript-track" style="display:block; background:#1a237e; color:#ffffff; padding:10px; border-radius:4px; text-align:center; font-size:11px; font-weight:bold;">Track Status</a></td>
+        </tr>
+      </table>
+      <a href="https://scholarindiapub.com/commerce-management" style="display:block; background:#ffffff; border:1px solid #1a237e; color:#1a237e; padding:12px; border-radius:4px; text-decoration:none; text-align:center; font-size:12px; font-weight:bold; margin-bottom:8px;">Scholar Journal of Commerce and Management</a>
+      <a href="https://scholarindiapub.com/humanities" style="display:block; background:#ffffff; border:1px solid #1a237e; color:#1a237e; padding:12px; border-radius:4px; text-decoration:none; text-align:center; font-size:12px; font-weight:bold; margin-bottom:12px;">Scholar Journal of Humanities and Social Sciences</a>
     </div>`;
 
   if (currentStatus === "pending") {
@@ -665,38 +687,43 @@ app.post('/send/reviewer-status-update', async (req, res) => {
     subject = `Official Appointment Letter: ${role} - ${journal}`;
     content = `
       <p>Greetings from Scholar India Publishers!</p>
-      <p>Based on your expressed interest in joining our editorial team, we are pleased to inform you that you have been selected and appointed as an <strong>${role}</strong> of our <strong>${journal}</strong>, published under Scholar India Publishers (SIP).</p>
+      <p>Based on your expressed interest in joining our editorial team (received via our online submission channels), we are pleased to inform you that you have been selected and appointed as an <strong>${role}</strong> of our <strong>${journal}</strong>, published under Scholar India Publishers (SIP).</p>
+      <p>We extend our sincere appreciation for your willingness to contribute to the advancement of research in the fields of commerce, management, and social sciences.</p>
       
-      <div style="background:#f8fafc; padding:25px; border-radius:10px; font-size:14px; color:#334155; border: 1px solid #e2e8f0; margin: 24px 0;">
-        <h3 style="color:#213361; margin-top:0; font-size:16px; border-bottom: 2px solid #213361; padding-bottom: 10px; text-transform:uppercase; letter-spacing:0.05em;">Roles and Responsibilities</h3>
-        <ul style="padding-left:18px; line-height:1.7; margin-top:15px;">
-          <li><strong>Editorial Oversight:</strong> Assist in maintaining academic quality and integrity through peer review management.</li>
-          <li><strong>Manuscript Handling:</strong> Evaluate submissions, assign reviewers, and provide editorial recommendations.</li>
-          <li><strong>Promotion:</strong> Encourage high-quality submissions and enhance the journal's reputation globally.</li>
-          <li><strong>Strategic Development:</strong> Contribute ideas for reaching new research trends and increasing impact.</li>
-          <li><strong>Ethical Standards:</strong> Ensure adherence to COPE (Committee on Publication Ethics) guidelines.</li>
+      <div style="background:#f1f3f8; padding:25px; border-radius:8px; font-size:14px; color:#333; border: 1px solid #d1d9e6; margin: 24px 0;">
+        <h3 style="color:#1a237e; margin-top:0; font-size:16px; border-bottom: 2px solid #ccc; padding-bottom: 10px;">Roles and Responsibilities</h3>
+        <p>As an <strong>${role}</strong>, your key roles and responsibilities include:</p>
+        <ul style="padding-left:20px; line-height:1.7; margin-top:15px;">
+          <li><strong>Editorial Oversight:</strong> Assist in maintaining the academic quality and integrity of the journal through the management of peer review and publication processes.</li>
+          <li><strong>Manuscript Handling:</strong> Evaluate submitted manuscripts for suitability, assign reviewers, and provide editorial recommendations based on reviewer feedback.</li>
+          <li><strong>Promotion of the Journal:</strong> Encourage high-quality manuscript submissions and help enhance the visibility and reputation of the journal within academic and professional circles.</li>
+          <li><strong>Strategic Development:</strong> Contribute ideas and suggestions for improving the journal’s reach, impact, and alignment with current research trends.</li>
+          <li><strong>Ethical Standards:</strong> Uphold and ensure adherence to the highest standards of publication ethics and integrity, following COPE (Committee on Publication Ethics) guidelines.</li>
+          <li><strong>Collaboration:</strong> Work in coordination with the Editorial Board, Reviewers, Managing Editor, and Publisher to ensure a smooth editorial workflow and timely publication.</li>
         </ul>
-        <p style="margin-top:20px;"><strong>Tenure:</strong> Initially for <strong>two (2) years</strong>, renewable by mutual consent.</p>
-        <p><strong>Financial Commitment:</strong> This is an <strong>honorary</strong> position; no financial remuneration is involved.</p>
-        <p style="font-size:11px; color:#64748b; font-style:italic; border-top:1px solid #e2e8f0; padding-top:12px; margin-top:15px;">
-          <strong>Termination Clause:</strong> The Publisher reserves authority to withdraw appointment if provided information is incorrect or contributions are insufficient.
+        
+        <p><strong>Tenure:</strong> Your tenure as <strong>${role}</strong> will initially be for a period of <strong>two (2) years</strong>, effective from the date of this communication, and may be renewed based on mutual consent and active participation.</p>
+        <p><strong>Financial Commitment:</strong> Please note that this appointment is purely <strong>honorary</strong>. There is no financial commitment or remuneration from either end. Your contribution is recognized as a professional service to the academic community.</p>
+        <p style="font-size:12px; color:#666; font-style: italic; border-top: 1px solid #ddd; padding-top:10px; margin-top:15px;">
+          <strong>Termination Clause:</strong> If the Managing Editor or Publisher finds that the information you have provided is incorrect, or that you are not actively contributing to the journal’s activities, or in any way acting contrary to the journal’s interests, the Managing Editor/Publisher reserves full authority to withdraw or terminate your appointment at any time during the tenure, without prior notice or explanation.
         </p>
       </div>
-      <p>We warmest welcome you to the team and look forward to your valuable contributions to <strong>${journal}</strong>.</p>`;
+      <p>We believe your expertise and dedication will play a key role in strengthening the journal’s academic standing and global outreach.</p>
+      <p>We warmly welcome you to the editorial team of <strong>${journal}</strong> and look forward to your valuable contributions.</p>`;
   }
   else if (currentStatus === "hold") {
     label = "Action Required";
     color = "#d97706";
     subject = `Action Required: Application for ${role} [ID: ${rID}]`;
     content = `
-      <p>We are writing to inform you that your application for <strong>${role}</strong> is currently <strong>On Hold</strong>.</p>
-      <div style="background:#fffcf0; border:1px solid #fef3c7; padding:20px; border-radius:8px; margin:24px 0;">
-        <p style="margin:0 0 10px 0; font-weight:800; color:#92400e; font-size:14px;">Reason: Mandatory Verification Pending</p>
-        <p style="font-size:13px; color:#451a03; line-height:1.5;">To maintain academic integrity, we <strong>require an official institutional email ID</strong> (e.g., yourname@university.edu) for all editorial board appointments.</p>
+      <p>We are writing to inform you that your application for the position of <strong>${role}</strong> is currently <strong>On Hold</strong>.</p>
+      <div style="background-color:#fff3cd; border:1px solid #ffeeba; border-left:6px solid #856404; padding:20px; border-radius:8px; margin:24px 0;">
+        <p style="margin:0; font-weight:bold; color:#856404;">Reason: Mandatory Verification Pending</p>
+        <p style="font-size:13px; margin-top:10px;">To maintain the academic integrity of our journals, we <strong>require an official institutional email ID</strong> (e.g., yourname@university.edu) for all editorial board appointments.</p>
       </div>
-      <p><strong>Action:</strong> Please <strong>reapply</strong> using your official institutional email address. Applications using personal accounts (Gmail, Yahoo, etc.) cannot be processed for active status.</p>
+      <p><strong>Action Required:</strong> Please <strong>reapply</strong> using the button below. Ensure you use your <strong>official institutional email address</strong> and provide updated publication/citation records. Applications using personal email accounts (Gmail, Yahoo, etc.) will not be processed.</p>
       <div style="text-align:center; margin:24px 0;">
-         <a href="https://scholarindiapub.com/join-reviewer" style="background:#213361; color:#ffffff; padding:14px 28px; border-radius:8px; text-decoration:none; font-weight:700; display:inline-block;">Resubmit Application →</a>
+         <a href="https://scholarindiapub.com/join-reviewer" style="background:#1a237e; color:#ffffff; padding:12px 25px; border-radius:6px; text-decoration:none; font-weight:bold; display:inline-block;">Resubmit Application Now</a>
       </div>`;
   }
   else if (currentStatus === "reject" || currentStatus === "rejected") {
@@ -705,26 +732,29 @@ app.post('/send/reviewer-status-update', async (req, res) => {
     subject = `Application Decision: ${role}`;
     content = `
       <p>Thank you for your interest in joining the editorial board of Scholar India Publishers.</p>
-      <p>After a rigorous review of your submitted credentials, we regret to inform you that your application has been <strong>Declined</strong> at this stage.</p>
-      <div style="border-left:4px solid #ef4444; padding:4px 20px; margin:24px 0; color:#475569; font-size:13px; line-height:1.6;">
-        <p style="font-weight:700; color:#1e293b; margin-bottom:8px;">Ineligibility Factors:</p>
-        <ul style="margin:0; padding-left:16px;">
-          <li>Lack of verifiable institutional/official email ID.</li>
+      <p>After a rigorous review of your profile and submitted credentials, we regret to inform you that your application has been <strong>Declined</strong> at this stage.</p>
+      <div style="border-left:6px solid #dc3545; background:#fff5f5; padding:20px; margin:24px 0; color:#444; font-size:13px; border-radius:4px;">
+        <p style="font-weight:700; color:#333; margin-bottom:8px;">Common Ineligibility Factors:</p>
+        <ul style="margin:0; padding-left:16px; line-height:1.7;">
+          <li>Failure to provide a verifiable <strong>institutional/official email ID</strong>.</li>
           <li>Insufficient research impact or citation history in the designated field.</li>
-          <li>Profile does not meet current technical requirements for the board.</li>
+          <li>Profile does not meet the journal's current technical requirements.</li>
         </ul>
       </div>
-      <p>You may reapply only if you can demonstrate significantly updated academic credentials and provide an institutional email.</p>`;
+      <p>You are welcome to <strong>reapply</strong> only if you can provide an <strong>institutional email address</strong> and demonstrate significantly updated academic credentials. We do not accept editorial appointments via personal email accounts.</p>
+      <div style="text-align:center; margin:24px 0;">
+         <a href="https://scholarindiapub.com/join-reviewer" style="background:#dc3545; color:#ffffff; padding:10px 20px; border-radius:6px; text-decoration:none; font-weight:bold; font-size:12px; display:inline-block;">Update & Reapply</a>
+      </div>`;
   }
 
   const html = `
-  <div style="background-color:#f1f5f9; padding:40px 0; font-family:Arial, sans-serif;">
-    <div style="max-width:620px; margin:auto; background-color:#ffffff; border-radius:12px; overflow:hidden; border:1px solid #e2e8f0; box-shadow:0 4px 6px -1px rgba(0,0,0,0.1);">
-      <div style="background-color:#213361; color:#ffffff; text-align:center; padding:40px 20px;">
-        <h1 style="margin:0; font-size:24px;">Scholar India Publishers</h1>
-        <div style="margin-top:8px; font-size:11px; opacity:0.8; letter-spacing:0.05em;">International Peer-Reviewed Academic Journals & Book Publishing</div>
+  <div style="background-color:#f4f7f6; padding:40px 0; font-family:Arial, sans-serif;">
+    <div style="max-width:620px; margin:auto; background-color:#ffffff; border-radius:12px; overflow:hidden; border:1px solid #e0e0e0; box-shadow:0 10px 30px rgba(0,0,0,0.1);">
+      <div style="background-color:#1a237e; color:#ffffff; text-align:center; padding:40px 20px;">
+        <h1 style="margin:0; font-size:26px;">Scholar India Publishers</h1>
+        <div style="margin-top:8px; font-size:11px; opacity:0.9; line-height:1.4;">International Peer-Reviewed Academic Journals & <br>Book Publishing Excellence Since 2022</div>
       </div>
-      <div style="padding:40px; color:#1e293b; line-height:1.7;">
+      <div style="padding:40px; color:#333333; line-height:1.7;">
         <div style="text-align:center; margin-bottom:32px;">
           <span style="background-color:${color}; color:#ffffff; padding:10px 28px; border-radius:6px; font-size:13px; font-weight:800; text-transform:uppercase; letter-spacing:0.1em; border-bottom:3px solid rgba(0,0,0,0.15);">
             ${label}
@@ -732,21 +762,21 @@ app.post('/send/reviewer-status-update', async (req, res) => {
         </div>
         <p style="font-size:15px;">Dear <strong>${name || 'Applicant'}</strong>,</p>
         <div style="font-size:14px; color:#475569;">${content}</div>
-        <div style="background-color:#f8fafc; border-left:4px solid #213361; padding:20px; border-radius:0 8px 8px 0; margin:32px 0; font-size:13px;">
+        <div style="background-color:#f8faff; border-left:6px solid #1a237e; padding:20px; border-radius:0 8px 8px 0; margin:32px 0; font-size:13px;">
            <table style="width:100%;">
-             <tr><td style="color:#64748b; font-weight:700; width:35%;">Application ID:</td><td style="color:#213361; font-weight:900; font-family:monospace;">${rID || 'N/A'}</td></tr>
-             <tr><td style="color:#64748b; font-weight:700;">Designation:</td><td style="color:#334155; font-weight:700;">${role || '—'}</td></tr>
-             <tr><td style="color:#64748b; font-weight:700;">Applied Journal:</td><td style="color:#334155;">${journal || '—'}</td></tr>
+             <tr><td style="color:#666; font-weight:700; width:35%;">Application ID:</td><td style="color:#1a237e; font-weight:900; font-family:monospace;">${rID || 'N/A'}</td></tr>
+             <tr><td style="color:#666; font-weight:700;">Designation:</td><td style="color:#333; font-weight:700;">${role || '—'}</td></tr>
+             <tr><td style="color:#666; font-weight:700;">Applied Journal:</td><td style="color:#333;">${journal || '—'}</td></tr>
            </table>
         </div>
         ${navDashboard}
-        <div style="margin-top:32px; padding-top:24px; border-top:1px solid #f1f5f9; font-size:12px; color:#94a3b8;">
-          Best Regards,<br/><strong style="color:#475569;">Editorial Office</strong><br/>Scholar India Publishers<br/>scholarindiapub@gmail.com
+        <div style="margin-top:32px; padding-top:24px; border-top:1px solid #eeeeee; font-size:12px; color:#666;">
+          Best Regards,<br/><strong>Editorial Office</strong><br/>Scholar India Publishers
         </div>
       </div>
-      <div style="background-color:#213361; color:#ffffff; text-align:center; padding:20px; font-size:10px;">
-        © 2026 Scholar India Publishers | Chennai, India<br/>
-        <a href="https://scholarindiapub.com" style="color:#fbbf24; text-decoration:none;">www.scholarindiapub.com</a>
+      <div style="background-color:#1a237e; color:#ffffff; text-align:center; padding:20px; font-size:10px;">
+        © ${new Date().getFullYear()} Scholar India Publishers | Chennai, India<br/>
+        <a href="https://scholarindiapub.com" style="color:#FFD700; text-decoration:none; font-weight:700;">www.scholarindiapub.com</a>
       </div>
     </div>
   </div>`;
@@ -784,18 +814,28 @@ app.post('/send/payment-status-update', async (req, res) => {
     typeLabel = "Payment Acknowledgement";
     labelColor = "#d97706";
     content = `
-      <p style="font-size:14px; color:#475569;">We have received the payment details for your manuscript: <strong>${details.msId}</strong>.</p>
-      <p style="font-size:14px; color:#475569;">Verification is <strong>Under Process</strong>. Our accounts team will verify the transaction within 24-48 working hours.</p>
-      <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:20px; margin:24px 0;">
-        <p style="margin:0 0 16px 0; color:#1e293b; font-weight:800; font-size:11px; text-transform:uppercase; letter-spacing:0.05em;">Submitted Payment Details:</p>
-        <table style="width:100%; border-collapse:collapse; font-size:13px;">
-          <tr><td style="padding:6px 0; color:#64748b; font-weight:700; width:45%;">Transaction Number</td><td style="padding:6px 0; color:#213361; font-weight:900; font-family:monospace;">${details.transId || '—'}</td></tr>
-          <tr><td style="padding:6px 0; color:#64748b; font-weight:700;">Amount Paid</td><td style="padding:6px 0; color:#334155; font-weight:700;">${details.currency || 'INR'} ${details.amount || '0'}</td></tr>
-          <tr><td style="padding:6px 0; color:#64748b; font-weight:700;">Date of Payment</td><td style="padding:6px 0; color:#334155;">${today}</td></tr>
-          <tr><td style="padding:6px 0; color:#64748b; font-weight:700;">Mode of Payment</td><td style="padding:6px 0; color:#334155;">${details.mode || '—'}</td></tr>
-        </table>
-      </div>`;
+      <p style="font-size:14px; color:#333;">We have received the payment details for your manuscript: <strong>${details.msId}</strong>.</p>
+      <p style="font-size:14px; color:#333;">Verification is <strong>Under Process</strong>. Our accounts team will verify the transaction within 24-48 working hours.</p>
+      <h4 style="color:#1a237e; margin:20px 0 5px 0; border-bottom:1px solid #eee; padding-bottom:5px; font-size:13px; text-transform:uppercase;">Payment Details</h4>
+      <table width="100%" style="font-size:12px; background:#f9f9f9; padding:15px; border:1px solid #eee; line-height:1.6; border-radius:4px;">
+        <tr><td width="40%"><strong>Transaction Number:</strong></td><td style="font-family:monospace; font-weight:700; color:#1a237e;">${details.transId}</td></tr>
+        <tr><td><strong>Amount Paid:</strong></td><td style="font-weight:700;">${details.currency || 'INR'} ${details.amount}</td></tr>
+        <tr><td><strong>Date of Payment:</strong></td><td>${today}</td></tr>
+        <tr><td><strong>Mode of Payment:</strong></td><td>${details.mode}</td></tr>
+      </table>`;
   } 
+  else if (status === "failed") {
+    typeLabel = "Payment Failed";
+    labelColor = "#dc3545";
+    subject = `Action Required: Payment Not Received for ${details.msId}`;
+    content = `
+      <p style="font-size:14px;">We are writing to inform you that we have <strong>not received</strong> the payment for your manuscript: <strong>${details.msId}</strong>.</p>
+      <div style="background-color:#fff5f5; border:1px solid #feb2b2; border-left:6px solid #dc3545; padding:15px; border-radius:4px; margin:20px 0; color:#c53030;">
+        <p style="margin:0; font-weight:bold;">Status: Transaction not found in our records.</p>
+      </div>
+      <p style="font-size:13px;">If you have already made the payment, please <strong>reply to this email with a screenshot, PDF receipt, or any evidence</strong> of the transaction for manual verification by our accounts team.</p>
+      <p style="font-size:13px; color:#555;">Kindly ensure the transaction number and date are clearly visible in the attachment.</p>`;
+  }
   else if (currentStatus === "success") {
     subject = `Invoice: ${details.invNo || 'SIP-Receipt'}`;
     typeLabel = "Invoice";
@@ -817,17 +857,17 @@ app.post('/send/payment-status-update', async (req, res) => {
                 <tr>
                   <td width="300" align="left" valign="top">
               <![endif]-->
-              <div style="display:inline-block; vertical-align:top; width:100%; max-width:280px; margin-bottom:15px;">
-                <div style="display:flex; align-items:center; gap:12px;">
-                  <div style="min-width:44px; height:44px; background:#213361; border-radius:8px; display:flex; align-items:center; justify-content:center;">
-                    <span style="color:#fff; font-weight:900; font-size:14px;">SIP</span>
-                  </div>
-                  <div>
-                     <p style="margin:0; font-size:16px; font-weight:900; color:#213361; text-transform:uppercase; letter-spacing:0.05em; line-height:1.2;">Invoice / Receipt</p>
-                     <p style="margin:2px 0 0; font-size:10px; color:#64748b; font-weight:700;">Official Confirmation</p>
-                  </div>
-                </div>
-              </div>
+              <table cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td valign="middle" style="padding-right:15px;">
+                    <div style="background:#1a237e; color:#ffffff; width:55px; height:55px; line-height:55px; text-align:center; border-radius:10px; font-weight:900; font-size:20px; font-family:Arial, sans-serif;">SIP</div>
+                  </td>
+                  <td valign="middle">
+                    <div style="font-size:10px; color:#666; font-weight:800; text-transform:uppercase; letter-spacing:1.5px; margin-bottom:2px;">Official Receipt</div>
+                    <div style="font-size:12px; color:#1a237e; font-weight:700; text-transform:uppercase;">Scholar India Publishers</div>
+                  </td>
+                </tr>
+              </table>
               <!--[if mso | IE]>
                   </td>
                   <td width="200" align="right" valign="top">
@@ -1386,6 +1426,306 @@ app.post('/send/production-status-update', async (req, res) => {
     console.error(e);
     res.status(500).json({ error: e.message });
   }
+});
+
+// ════════════════════════════════════════════════════════════════════════════
+// 14. THIRD PARTY WORK SUBMISSION RECEIPT
+// POST /send/third-party-receipt
+// { name, email, workDescription, transactionId, date }
+// ════════════════════════════════════════════════════════════════════════════
+app.post('/send/third-party-receipt', async (req, res) => {
+  const { name, email, workDescription, transactionId, date } = req.body;
+  if (!email) return res.status(400).json({ error: 'email required' });
+
+  const subject = `Receipt: Payment Details Received [${transactionId}]`;
+  const html = wrapper(`
+    <p>Dear <strong>${name}</strong>,</p>
+    <p>We have received your payment details and proof of transaction for: <strong>${workDescription}</strong>.</p>
+    <p>Your submission is currently under manual verification. We will notify you once your payment has been approved.</p>
+    <div style="background:#f1f5f9; padding:20px; border-radius:10px; margin:24px 0;">
+       <table style="width:100%; font-size:13px;">
+          <tr><td style="color:#64748b; font-weight:700; width:35%;">Transaction ID:</td><td style="color:#213361; font-weight:900;">${transactionId}</td></tr>
+          <tr><td style="color:#64748b; font-weight:700;">Purpose:</td><td>${workDescription}</td></tr>
+          <tr><td style="color:#64748b; font-weight:700;">Date:</td><td>${date}</td></tr>
+       </table>
+    </div>
+  `);
+
+  try { await sendMail({ to: email, subject, html }); res.json({ success: true }); }
+  catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// ════════════════════════════════════════════════════════════════════════════
+// 15. THIRD PARTY WORK STATUS UPDATE
+// POST /send/third-party-status
+// { name, email, workDescription, transactionId, status, reason }
+// ════════════════════════════════════════════════════════════════════════════
+app.post('/send/third-party-status', async (req, res) => {
+  const { name, email, workDescription, transactionId, status, reason } = req.body;
+  if (!email || !status) return res.status(400).json({ error: 'email and status required' });
+
+  let subject = `Payment Status: ${status} [${transactionId}]`;
+  let content = `<p>Dear <strong>${name}</strong>,</p>`;
+  if (status.toLowerCase() === 'approved') {
+    content += `
+      <p>We are pleased to inform you that your payment for <strong>${workDescription}</strong> (Txn: ${transactionId}) has been successfully <strong>verified and approved</strong>.</p>
+      <p>Thank you for choosing our professional services.</p>`;
+  } else {
+    content += `
+      <p>We regret to inform you that your payment for <strong>${workDescription}</strong> (Txn: ${transactionId}) has been <strong>rejected</strong> by our accounts department.</p>
+      ${reason ? `<p><strong>Reason:</strong> ${reason}</p>` : ''}
+      <p>Please contact our support team for further clarification.</p>`;
+  }
+
+  const html = wrapper(content);
+
+  try { await sendMail({ to: email, subject, html }); res.json({ success: true }); }
+  catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// ════════════════════════════════════════════════════════════════════════════
+// 16. BOOK PROPOSAL STATUS UPDATE
+// POST /send/book-status-update
+// { name, email, status, details: { bID, bookTitle, pubType, format, isbnVal } }
+// ════════════════════════════════════════════════════════════════════════════
+app.post('/send/book-status-update', async (req, res) => {
+  const { name, email, status, details } = req.body;
+  if (!email || !status || !details) return res.status(400).json({ error: 'email, status, and details required' });
+
+  const currentStatus = String(status).toLowerCase();
+  const authorName = name || "Author";
+  const bID = details.bID || "N/A";
+  const bookTitle = details.bookTitle || "Untitled Proposal";
+  const pubType = details.pubType || "Full Book";
+  const format = details.format || "Print + Digital";
+  const isbnVal = details.isbnVal || "Pending Allotment";
+
+  let subject = "";
+  let label = "";
+  let badgeColor = "#6c757d";
+  let content = "";
+  let actionArea = "";
+
+  if (currentStatus.includes("under review") || currentStatus.includes("under_review")) {
+    subject = `Technical Review: ${bookTitle} [ID: ${bID}]`;
+    label = "Under Review";
+    badgeColor = "#ff9800";
+    content = `<p>We confirm that your proposal titled <strong>"${bookTitle}"</strong> is currently <strong>Under Technical Review</strong>.</p>
+               <p>Our editorial team is assessing the scope, content quality, and academic relevance.</p>`;
+    actionArea = `<div style="background:#fffdec; border:1px solid #ffc107; padding:15px; border-radius:8px; font-size:13px; color:#333;">
+                    <strong>Timeline:</strong> This process usually takes 7-10 working days.
+                  </div>`;
+  } else if (currentStatus.includes("accepted")) {
+    subject = `Acceptance & Payment: ${bookTitle} [ID: ${bID}]`;
+    label = "Proposal Accepted";
+    badgeColor = "#198754";
+    
+    let feeAmount = "INR 15,000";
+    let feeDetails = "(Includes 4 Hard Copies of the Book)";
+    
+    if (pubType.toLowerCase().includes("chapter")) {
+      feeAmount = "INR 1,000 per Chapter";
+      feeDetails = "(Processing & Digital Publication Fee)";
+    }
+
+    content = `<p>Congratulations! We are pleased to inform you that your work <strong>"${bookTitle}"</strong> has been <strong>Accepted</strong> for publication.</p>
+               <p>To proceed with ISBN allotment, formatting, and production, please complete the processing fee payment.</p>`;
+    
+    actionArea = `<div style="background:#f0f9f1; border:1px solid #198754; padding:20px; border-radius:8px; text-align:center;">
+                    <p style="margin:0; font-size:16px; font-weight:bold; color:#198754;">Processing Fee: ${feeAmount}</p>
+                    <p style="margin:5px 0 15px 0; font-size:12px; color:#555;">${feeDetails}</p>
+                    
+                    <div style="background:#fff; padding:10px; border:1px dashed #198754; display:inline-block; margin-bottom:15px; font-size:12px;">
+                      <strong>Payment Instruction:</strong><br>
+                      Please quote Ref No: <span style="color:#d63384; font-weight:bold;">${bID}</span> in the payment remarks.
+                    </div>
+                    <br>
+                    <a href="https://scholarindiapub.com/payment" style="background:#198754; color:#ffffff; padding:12px 25px; border-radius:4px; text-decoration:none; font-weight:bold;">Pay & Submit Receipt</a>
+                  </div>`;
+  } else if (currentStatus.includes("rejected") || currentStatus.includes("reject")) {
+    subject = `Editorial Decision: ${bookTitle}`;
+    label = "Application Declined";
+    badgeColor = "#dc3545";
+    content = `<p>After a thorough screening of your submission, we regret to inform you that we cannot proceed with your publication at this time.</p>`;
+    actionArea = `<div style="background:#fff5f5; border:1px solid #dc3545; padding:20px; border-radius:8px;">
+                    <p style="margin:0 0 10px 0; color:#dc3545; font-weight:bold;">Review Summary:</p>
+                    <ul style="font-size:13px; color:#333; line-height:1.6; padding-left:20px;">
+                      <li><strong>Decision:</strong> Declined due to high similarity index or scope misalignment.</li>
+                    </ul>
+                  </div>`;
+  } else if (currentStatus.includes("published")) {
+    subject = `Publication Announcement: ${bookTitle} [ISBN: ${isbnVal}]`;
+    label = "Officially Published";
+    badgeColor = "#0d6efd";
+    content = `<p>We are delighted to announce that your work <strong>"${bookTitle}"</strong> is now <strong>Published</strong> and available in our repository.</p>`;
+    actionArea = `<div style="background:#eef5ff; border:1px solid #0d6efd; padding:20px; border-radius:8px; text-align:center;">
+                    <span style="font-size:12px; color:#555; text-transform:uppercase;">Permanent Allotted ISBN</span><br>
+                    <strong style="font-size:20px; color:#0d6efd; letter-spacing:1px;">${isbnVal}</strong>
+                  </div>`;
+  } else {
+    subject = `Update on Book Proposal: ${bookTitle}`;
+    label = "Status Update";
+    badgeColor = "#6c757d";
+    content = `<p>Your proposal titled <strong>"${bookTitle}"</strong> has a new status update: <strong>${status}</strong>.</p>`;
+    actionArea = ``;
+  }
+
+  const html = `
+  <div style="background-color:#f4f7f6;padding:20px 0;font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+    <div style="max-width:650px;margin:auto;background-color:#ffffff;border-radius:8px;overflow:hidden;border:1px solid #e0e0e0;">
+      
+      <div style="background-color:#1a237e;color:#ffffff;text-align:center;padding:30px 20px;">
+        <h1 style="margin:0;font-size:24px;">Scholar India Publishers</h1>
+        <div style="margin-top:8px;font-size:11px;opacity:0.95;font-style:italic; line-height:1.4;">
+          International Peer-Reviewed Academic Journals and Book Publishing Excellence Since 2022
+        </div>
+      </div>
+
+      <div style="padding:35px;color:#333333;line-height:1.6;">
+        
+        <div style="text-align:center; margin-bottom:30px;">
+          <span style="background-color:${badgeColor}; color:#ffffff; padding:10px 25px; border-radius:4px; font-size:14px; font-weight:bold; text-transform:uppercase; letter-spacing:1px; display:inline-block; border-bottom:3px solid rgba(0,0,0,0.1);">
+            ${label}
+          </span>
+        </div>
+        
+        <p>Dear <strong>${authorName}</strong>,</p>
+        ${content}
+        
+        <div style="background-color:#f8faff;border-left:4px solid #1a237e;padding:15px;border-radius:4px;margin:25px 0;font-size:13px;">
+            <strong>Book Ref No:</strong> ${bID}<br>
+            <strong>Book Title:</strong> ${bookTitle}<br>
+            <strong>Publication Type:</strong> ${pubType} (${format})
+        </div>
+
+        ${actionArea}
+        
+        <p style="margin-top:40px;border-top:1px solid #eeeeee;padding-top:20px;font-size:12px;color:#666;">
+          Best Regards,<br>
+          <strong>Editor (Book Publication)</strong><br>
+          Scholar India Publishers<br>
+          <a href="mailto:editor@scholarindiapub.com" style="color:#1a237e;text-decoration:none;">editor@scholarindiapub.com</a>
+        </p>
+      </div>
+
+      <div style="background-color:#1a237e;color:#ffffff;text-align:center;padding:20px;font-size:10px;">
+        © ${new Date().getFullYear()} Scholar India Publishers | Chennai, India<br>
+        <a href="https://scholarindiapub.com" style="color:#FFD700; text-decoration:none;">www.scholarindiapub.com</a>
+      </div>
+    </div>
+  </div>`;
+
+  try { await sendMail({ to: email, subject, html }); res.json({ success: true }); }
+  catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// ════════════════════════════════════════════════════════════════════════════
+// 17. REVIEWER MANAGEMENT SYSTEM (INVITATION, REMINDER, COMPLETION)
+// POST /send/reviewer-assignment-update
+// { name, email, type, details: { mID, mTitle, dueDate } }
+// ════════════════════════════════════════════════════════════════════════════
+app.post('/send/reviewer-assignment-update', async (req, res) => {
+  const { name, email, type, details } = req.body;
+  if (!email || !type || !details) return res.status(400).json({ error: 'email, type, and details required' });
+
+  let subject = "";
+  let bodyContent = "";
+  let badgeLabel = "Reviewer Notification";
+  let badgeColor = "#1a237e";
+  
+  const mID = details.mID || "N/A";
+  const mTitle = details.mTitle || "Research Manuscript";
+  const dueDateStr = details.dueDate || "TBD";
+
+  if (type === "INVITATION") {
+    subject = `Review Request: [ID: ${mID}] - Scholar India Publishers`;
+    badgeLabel = "New Review Assignment";
+    badgeColor = "#1a237e";
+    bodyContent = `
+      <p>Dear <strong>${name}</strong>,</p>
+      <p>We are pleased to invite you to review the manuscript titled <strong>"${mTitle}"</strong> [ID: ${mID}] for our journal.</p>
+      <p>Your expertise is highly valued in maintaining the quality of our academic publications.</p>
+      <div style="background:#f1f3f9; padding:15px; border-left:4px solid #1a237e; border-radius:4px; margin:20px 0;">
+        <p style="margin:0 0 10px 0;"><strong>Due Date:</strong> <span style="color:#d63031; font-weight:bold;">${dueDateStr}</span></p>
+        <p style="margin:0;">Please log in to the Reviewer Portal to view the document and submit your evaluation.</p>
+      </div>
+      <div style="text-align:center; margin:30px 0;">
+        <a href="https://scholarindiapub.com/reviewer-login" style="display:inline-block; background:#1a237e; color:#fff; padding:12px 30px; text-decoration:none; border-radius:5px; font-weight:bold; text-transform:uppercase; font-size:14px; letter-spacing:1px;">Login to Reviewer Portal</a>
+      </div>`;
+  } 
+  else if (type === "REMINDER") {
+    subject = `REMINDER: Review Due Shortly [ID: ${mID}]`;
+    badgeLabel = "Review Deadline Reminder";
+    badgeColor = "#d63031";
+    bodyContent = `
+      <p>Dear <strong>${name}</strong>,</p>
+      <p>This is a gentle reminder regarding your pending review for the manuscript <strong>"${mTitle}"</strong> [ID: ${mID}].</p>
+      <div style="background:#fff5f5; border:1px solid #ffcdd2; padding:15px; border-radius:4px; margin:20px 0;">
+        <p style="margin:0; color:#c62828;"><strong>The due date is approaching:</strong> ${dueDateStr}</p>
+      </div>
+      <p>We kindly request you to complete your evaluation by this date to ensure timely publication of the author's work.</p>
+      <div style="text-align:center; margin:30px 0;">
+        <a href="https://scholarindiapub.com/reviewer-login" style="display:inline-block; border:2px solid #1a237e; color:#1a237e; padding:12px 30px; text-decoration:none; border-radius:5px; font-weight:bold; text-transform:uppercase; font-size:14px; letter-spacing:1px;">Access Portal</a>
+      </div>`;
+  }
+  else if (type === "COMPLETED") {
+    subject = `Acknowledgement & Certificate: Review Completed [ID: ${mID}]`;
+    badgeLabel = "Review Completed";
+    badgeColor = "#198754";
+    bodyContent = `
+      <p>Dear <strong>${name}</strong>,</p>
+      <p>Thank you for completing the review for the manuscript <strong>"${mTitle}"</strong> [ID: ${mID}].</p>
+      <p>In recognition of your expertise and time, your <strong>official Certificate of Reviewing</strong> is being processed.</p>
+      <div style="background:#f0fdf4; border:1px solid #bbf7d0; padding:15px; border-radius:4px; margin:20px 0;">
+        <p style="margin:0; color:#166534;">Your certificate will be available to view and download via the Reviewer Dashboard once finalized by the editorial board.</p>
+      </div>
+      <p>We look forward to collaborating with you again soon. Thank you for your continued support of Scholar India Publishers.</p>`;
+  }
+
+  // Prepend badge to bodyContent
+  const finalContent = `
+    <div style="text-align:center; margin-bottom:20px;">
+      <span style="background-color:${badgeColor}; color:#ffffff; padding:6px 15px; border-radius:20px; font-size:12px; font-weight:bold; text-transform:uppercase; letter-spacing:1px; display:inline-block;">
+        ${badgeLabel}
+      </span>
+    </div>
+    ${bodyContent}
+  `;
+
+  const html = wrapper(finalContent);
+
+  try { await sendMail({ to: email, subject, html }); res.json({ success: true }); }
+  catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// ════════════════════════════════════════════════════════════════════════════
+// 17. SUB-ADMIN CREDENTIALS
+// POST /send/subadmin-credentials
+// { name, email, password }
+// ════════════════════════════════════════════════════════════════════════════
+app.post('/send/subadmin-credentials', async (req, res) => {
+  const { name, email, password } = req.body;
+  if (!email || !password) return res.status(400).json({ error: 'email and password required' });
+
+  const subject = `Welcome to Scholar India ERP: Sub-Admin Access`;
+  const html = wrapper(`
+    <p>Dear <strong>${name}</strong>,</p>
+    <p>An administrative account has been created for you on the Scholar India Publishers ERP Portal.</p>
+    <p>You can now log in to the <strong>Sub-Admin Dashboard</strong> using the credentials below:</p>
+    <div style="background:#f1f5f9; padding:20px; border-radius:10px; margin:24px 0;">
+       <table style="width:100%; font-size:14px;">
+          <tr><td style="color:#64748b; font-weight:700; width:30%; padding-bottom:10px;">Email:</td><td style="color:#213361; font-weight:900; padding-bottom:10px;">${email}</td></tr>
+          <tr><td style="color:#64748b; font-weight:700;">Password:</td><td style="color:#213361; font-weight:900; background:#fff; padding:5px 10px; border-radius:4px; display:inline-block; border:1px solid #cbd5e1;">${password}</td></tr>
+       </table>
+    </div>
+    <div style="text-align:center; margin-top:28px;">
+       <a href="https://scholarindiapub.com/admin/login" style="background:#213361; color:#fff; padding:12px 25px; border-radius:8px; text-decoration:none; font-weight:800; font-size:13px;">LOGIN TO ERP DASHBOARD</a>
+    </div>
+    <p style="margin-top:24px; font-size:12px; color:#64748b;"><em>Please log in and change your password as soon as possible for security purposes.</em></p>
+  `, "Sub-Admin Access", "#0369a1");
+
+  try { await sendMail({ to: email, subject, html }); res.json({ success: true }); }
+  catch (e) { res.status(500).json({ error: e.message }); }
 });
 
 // ── Start ────────────────────────────────────────────────────────────────────
