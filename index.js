@@ -66,28 +66,31 @@ async function sendMail({ to, subject, html }) {
   return transporter.sendMail({ from: FROM, to, subject, html });
 }
 
-// ── Shared Styles (Original UI Restoration) ──────────────────────────────────
-const wrapper = (content) => `
-<!DOCTYPE html><html><head><meta charset="utf-8"/></head>
-<body style="margin:0;padding:30px 0;background:#f4f7f6;font-family:Arial,sans-serif;">
-  <div style="max-width:600px;margin:auto;background:#ffffff;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,0.1);overflow:hidden;border:1px solid #e0e0e0;">
+// ── Shared Styles (Premium UI) ──────────────────────────────────
+const wrapper = (content, badgeText = "Notification", badgeColor = "#1a237e") => `
+<!DOCTYPE html><html><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/></head>
+<body style="margin:0;padding:30px 0;background:#f8fafc;font-family:'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
+  <div style="max-width:600px;margin:auto;background:#ffffff;border-radius:16px;box-shadow:0 20px 40px rgba(0,0,0,0.08);overflow:hidden;border:1px solid #e2e8f0;">
     <!-- Header -->
-    <div style="background-color:#1a237e;color:#ffffff;text-align:center;padding:35px 20px;">
-      <h1 style="margin:0;font-size:24px;font-weight:900;letter-spacing:1px;">Scholar India Publishers</h1>
-      <p style="margin:8px 0 0;font-size:11px;opacity:0.85;font-style:italic;letter-spacing:0.5px;">
-        International Peer-Reviewed Academic Journals & Book Publishing Excellence
+    <div style="background-color:#1e3a8a;color:#ffffff;text-align:center;padding:40px 20px;position:relative;">
+      <h1 style="margin:0;font-size:26px;font-weight:900;letter-spacing:0.5px;">Scholar India Publishers</h1>
+      <p style="margin:10px 0 0;font-size:12px;opacity:0.9;font-style:italic;letter-spacing:1px;text-transform:uppercase;">
+        Scientific & Academic Publishing Excellence
       </p>
-      <div style="width:40px;height:2px;background:#FFD700;margin:15px auto 0;border-radius:2px;"></div>
+      <div style="margin-top:20px;">
+        <span style="background:${badgeColor}; color:#ffffff; padding:6px 14px; border-radius:100px; font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:1.5px; border:1px solid rgba(255,255,255,0.2); box-shadow: 0 4px 10px rgba(0,0,0,0.1);">${badgeText}</span>
+      </div>
     </div>
     <!-- Body -->
-    <div style="padding:40px;color:#333333;line-height:1.7;">
+    <div style="padding:45px;color:#1e293b;line-height:1.8;font-size:15px;">
       ${content}
     </div>
     <!-- Footer -->
-    <div style="background:#1a237e;color:#ffffff;text-align:center;padding:20px;font-size:10px;">
-      <p style="margin:0;">© ${new Date().getFullYear()} Scholar India Publishers | Chennai, India</p>
-      <p style="margin:6px 0 0;"><a href="https://scholarindiapub.com" style="color:#FFD700;text-decoration:none;font-weight:700;">www.scholarindiapub.com</a></p>
-      <p style="margin:10px 0 0;color:#94a3b8;font-size:9px;opacity:0.6;">This is an automated academic notification. Please do not reply directly to this address.</p>
+    <div style="background:#f1f5f9;color:#475569;text-align:center;padding:30px;font-size:11px;border-top:1px solid #e2e8f0;">
+      <p style="margin:0;font-weight:700;">© ${new Date().getFullYear()} Scholar India Publishers</p>
+      <p style="margin:4px 0 0;opacity:0.8;">Academic Headquarters | Chennai, India</p>
+      <div style="margin:15px 0;"><a href="https://scholarindiapub.com" style="color:#1e3a8a;text-decoration:none;font-weight:700;">Visit Official Website</a></div>
+      <p style="margin:15px 0 0;color:#94a3b8;font-size:10px;">This is a system-generated academic notification from the Scholar India ERP Console.</p>
     </div>
   </div>
 </body></html>`;
