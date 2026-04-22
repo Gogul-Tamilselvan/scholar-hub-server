@@ -66,6 +66,18 @@ async function sendMail({ to, subject, html }) {
   return transporter.sendMail({ from: FROM, to, subject, html });
 }
 
+// ── Security Helpers ─────────────────────────────────────────────────────────
+// Simple HTML escape to prevent XSS in email clients
+const esc = (str) => {
+  if (!str) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+};
+
 // ── Shared Styles (Premium UI) ──────────────────────────────────
 const wrapper = (content, badgeText = "Notification", badgeColor = "#1a237e") => `
 <!DOCTYPE html><html><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/></head>
@@ -1712,13 +1724,13 @@ app.post('/send/subadmin-credentials', async (req, res) => {
 
   const subject = `Welcome to Scholar India ERP: Sub-Admin Access`;
   const html = wrapper(`
-    <p>Dear <strong>${name}</strong>,</p>
+    <p>Dear <strong>${esc(name)}</strong>,</p>
     <p>An administrative account has been created for you on the Scholar India Publishers ERP Portal.</p>
     <p>You can now log in to the <strong>Sub-Admin Dashboard</strong> using the credentials below:</p>
     <div style="background:#f1f5f9; padding:20px; border-radius:10px; margin:24px 0;">
        <table style="width:100%; font-size:14px;">
-          <tr><td style="color:#64748b; font-weight:700; width:30%; padding-bottom:10px;">Email:</td><td style="color:#213361; font-weight:900; padding-bottom:10px;">${email}</td></tr>
-          <tr><td style="color:#64748b; font-weight:700;">Password:</td><td style="color:#213361; font-weight:900; background:#fff; padding:5px 10px; border-radius:4px; display:inline-block; border:1px solid #cbd5e1;">${password}</td></tr>
+          <tr><td style="color:#64748b; font-weight:700; width:30%; padding-bottom:10px;">Email:</td><td style="color:#213361; font-weight:900; padding-bottom:10px;">${esc(email)}</td></tr>
+          <tr><td style="color:#64748b; font-weight:700;">Password:</td><td style="color:#213361; font-weight:900; background:#fff; padding:5px 10px; border-radius:4px; display:inline-block; border:1px solid #cbd5e1;">${esc(password)}</td></tr>
        </table>
     </div>
     <div style="text-align:center; margin-top:28px;">
@@ -1744,15 +1756,15 @@ app.post('/send/certificate-generated', async (req, res) => {
   const verificationUrl = `https://scholarindiapub.com/certificate-verification?id=${encodeURIComponent(reviewerId)}`;
   const subject = `Your Peer Review Certificate is Ready — Scholar India Publishers`;
   const html = wrapper(`
-    <p>Dear <strong>${name}</strong>,</p>
+    <p>Dear <strong>${esc(name)}</strong>,</p>
     <p>We are pleased to inform you that your <strong>Peer Review Certificate</strong> has been officially generated and is now available for download.</p>
 
     <div style="background:#eef5ff; border:1px solid #bfdbfe; border-radius:12px; padding:20px; margin:24px 0;">
       <table style="width:100%; font-size:13px; border-collapse:collapse;">
-        <tr><td style="color:#64748b; font-weight:700; padding:6px 0; width:38%;">Reviewer / Editor ID:</td><td style="color:#1e3a8a; font-weight:900;">${reviewerId}</td></tr>
-        <tr><td style="color:#64748b; font-weight:700; padding:6px 0;">Certificate No:</td><td style="color:#1e3a8a; font-weight:900;">${certNo || '—'}</td></tr>
-        <tr><td style="color:#64748b; font-weight:700; padding:6px 0;">Journal:</td><td style="font-weight:600;">${journalName || '—'}</td></tr>
-        ${manuscriptTitle ? `<tr><td style="color:#64748b; font-weight:700; padding:6px 0;">Manuscript:</td><td style="font-weight:600;">${manuscriptTitle}</td></tr>` : ''}
+        <tr><td style="color:#64748b; font-weight:700; padding:6px 0; width:38%;">Reviewer / Editor ID:</td><td style="color:#1e3a8a; font-weight:900;">${esc(reviewerId)}</td></tr>
+        <tr><td style="color:#64748b; font-weight:700; padding:6px 0;">Certificate No:</td><td style="color:#1e3a8a; font-weight:900;">${esc(certNo || '—')}</td></tr>
+        <tr><td style="color:#64748b; font-weight:700; padding:6px 0;">Journal:</td><td style="font-weight:600;">${esc(journalName || '—')}</td></tr>
+        ${manuscriptTitle ? `<tr><td style="color:#64748b; font-weight:700; padding:6px 0;">Manuscript:</td><td style="font-weight:600;">${esc(manuscriptTitle)}</td></tr>` : ''}
       </table>
     </div>
 
@@ -1764,7 +1776,7 @@ app.post('/send/certificate-generated', async (req, res) => {
     </div>
 
     <div style="background:#f0fdf4; border-left:4px solid #198754; padding:14px 18px; border-radius:0 8px 8px 0; margin:20px 0; font-size:12px; color:#166534;">
-      <strong>How to verify:</strong> Visit the verification page and enter your Reviewer ID (<strong>${reviewerId}</strong>) to confirm your certificate's authenticity and view the details online.
+      <strong>How to verify:</strong> Visit the verification page and enter your Reviewer ID (<strong>${esc(reviewerId)}</strong>) to confirm your certificate's authenticity and view the details online.
     </div>
 
     <p style="font-size:12px; color:#64748b; margin-top:20px;">If you have any questions, please contact us at <a href="mailto:editor@scholarindiapub.com" style="color:#1e3a8a;">editor@scholarindiapub.com</a>.</p>
