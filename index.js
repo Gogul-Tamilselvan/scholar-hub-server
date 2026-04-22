@@ -1356,6 +1356,29 @@ app.post('/send/contact-acknowledgement', async (req, res) => {
   catch (e) { res.status(500).json({ error: e.message }); }
 });
 
+// F. Newsletter Welcome
+app.post('/send/newsletter-welcome', async (req, res) => {
+  const { email } = req.body;
+  if (!email) return res.status(400).json({ error: 'email required' });
+
+  const subject = `Welcome to Scholar India Publishers Newsletter`;
+  const html = wrapper(`
+    <p>Hello,</p>
+    <p>Thank you for subscribing to the <strong>Scholar India Publishers</strong> newsletter.</p>
+    <p>You will now receive periodic updates regarding:</p>
+    <ul style="color:#475569; font-size:13px; line-height:1.6;">
+       <li>Call for Papers & Special Issues</li>
+       <li>Newly published research articles</li>
+       <li>Upcoming academic conferences</li>
+       <li>Book publication opportunities</li>
+    </ul>
+    <p style="margin-top:24px;">We are excited to have you as part of our academic community.</p>
+  `, "Newsletter Subscribed", "#4f46e5");
+
+  try { await sendMail({ to: email, subject, html }); res.json({ success: true }); }
+  catch (e) { res.status(500).json({ error: e.message }); }
+});
+
 // E. Message/Broadcast Notification
 app.post('/send/message-notification', async (req, res) => {
   const { toName, email, fromName, messageSnippet } = req.body;
