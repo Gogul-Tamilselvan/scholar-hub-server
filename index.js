@@ -231,7 +231,7 @@ app.post('/send/payment-invoice', async (req, res) => {
               <table cellpadding="0" cellspacing="0" border="0">
                 <tr>
                   <td valign="middle" style="padding-right:15px;">
-                    <div style="background:#1a237e; color:#ffffff; width:55px; height:55px; line-height:55px; text-align:center; border-radius:10px; font-weight:900; font-size:20px; font-family:Arial, sans-serif;">SIP</div>
+                    <img src="https://raw.githubusercontent.com/Gogul-Tamilselvan/scholarhub/main/client/public/logo-sip.png" alt="SIP Logo" width="55" style="display:block; max-width:55px; height:auto; border-radius:8px;" />
                   </td>
                   <td valign="middle">
                     <div style="font-size:10px; color:#666; font-weight:800; text-transform:uppercase; letter-spacing:1.5px; margin-bottom:2px;">Official Receipt</div>
