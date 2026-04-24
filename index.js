@@ -3,6 +3,7 @@ import nodemailer from 'nodemailer';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import rateLimit from 'express-rate-limit';
+import path from 'path';
 
 dotenv.config();
 
@@ -13,6 +14,9 @@ app.use(cors({
   methods: ['GET', 'POST', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'x-api-key']
 }));
+
+// Serve static files from the public folder
+app.use(express.static(path.join(process.cwd(), 'public')));
 
 // ── Rate Limiting ────────────────────────────────────────────────────────────
 
@@ -231,7 +235,7 @@ app.post('/send/payment-invoice', async (req, res) => {
               <table cellpadding="0" cellspacing="0" border="0">
                 <tr>
                   <td valign="middle" style="padding-right:15px;">
-                    <img src="https://raw.githubusercontent.com/Gogul-Tamilselvan/scholarhub/main/client/public/logo-sip.png" alt="SIP Logo" width="55" style="display:block; max-width:55px; height:auto; border-radius:8px;" />
+                    <img src="https://scholar-hub-server-seven.vercel.app/logo-sip.png" alt="SIP Logo" width="55" style="display:block; max-width:55px; height:auto; border-radius:8px;" />
                   </td>
                   <td valign="middle">
                     <div style="font-size:10px; color:#666; font-weight:800; text-transform:uppercase; letter-spacing:1.5px; margin-bottom:2px;">Official Receipt</div>
