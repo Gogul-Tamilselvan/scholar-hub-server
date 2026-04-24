@@ -237,10 +237,7 @@ app.post('/send/payment-invoice', async (req, res) => {
                   <td valign="middle" style="padding-right:15px;">
                     <img src="https://scholar-hub-server-seven.vercel.app/logo-sip.png" alt="SIP Logo" width="55" style="display:block; max-width:55px; height:auto; border-radius:8px;" />
                   </td>
-                  <td valign="middle">
-                    <div style="font-size:10px; color:#666; font-weight:800; text-transform:uppercase; letter-spacing:1.5px; margin-bottom:2px;">Official Receipt</div>
-                    <div style="font-size:12px; color:#1a237e; font-weight:700; text-transform:uppercase;">Scholar India Publishers</div>
-                  </td>
+                
                 </tr>
               </table>
             </td>
