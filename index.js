@@ -1823,6 +1823,39 @@ app.post('/send/certificate-generated', async (req, res) => {
   catch (e) { res.status(500).json({ error: e.message }); }
 });
 
+// ════════════════════════════════════════════════════════════════════════════
+// 19. SUBADMIN CREDENTIALS
+// POST /send/subadmin-credentials
+// { name, email, role, password, loginUrl }
+// ════════════════════════════════════════════════════════════════════════════
+app.post('/send/subadmin-credentials', async (req, res) => {
+  const { name, email, role, password, loginUrl } = req.body;
+  if (!email || !password) return res.status(400).json({ error: 'email and password required' });
+
+  const subject = `Your Admin Portal Credentials — Scholar India Publishers`;
+  const html = wrapper(`
+    <p>Dear <strong>${esc(name || 'Admin')}</strong>,</p>
+    <p>An administrative account has been created for you on the Scholar India Publishers platform.</p>
+
+    <div style="background:#eef5ff; border:1px solid #bfdbfe; border-radius:12px; padding:20px; margin:24px 0;">
+      <table style="width:100%; font-size:13px; border-collapse:collapse;">
+        <tr><td style="color:#64748b; font-weight:700; padding:6px 0; width:38%;">Role:</td><td style="color:#1e3a8a; font-weight:900;">${esc(role || 'Sub-Admin')}</td></tr>
+        <tr><td style="color:#64748b; font-weight:700; padding:6px 0;">Email:</td><td style="color:#1e3a8a; font-weight:900;">${esc(email)}</td></tr>
+        <tr><td style="color:#64748b; font-weight:700; padding:6px 0;">Password:</td><td style="font-weight:600; font-family:monospace; background:#fff; padding:2px 6px; border-radius:4px; border:1px solid #e2e8f0;">${esc(password)}</td></tr>
+      </table>
+    </div>
+
+    <p style="margin-bottom:20px; color:#ef4444; font-weight:bold; font-size:12px;">Please change your password immediately after your first login for security purposes.</p>
+
+    <div style="text-align:center; margin:28px 0;">
+      <a href="${esc(loginUrl || 'https://scholarindiapub.com/admin/login')}" style="background:#1e3a8a; color:#fff; padding:12px 24px; border-radius:8px; text-decoration:none; font-weight:800; font-size:13px; display:inline-block;">🔐 Log In to Dashboard</a>
+    </div>
+  `, "Admin Credentials", "#1e3a8a");
+
+  try { await sendMail({ to: email, subject, html }); res.json({ success: true }); }
+  catch (e) { res.status(500).json({ error: e.message }); }
+});
+
 // ── Start ────────────────────────────────────────────────────────────────────
 const PORT = process.env.PORT || 4001;
 app.listen(PORT, () => {
